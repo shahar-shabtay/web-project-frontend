@@ -5,7 +5,7 @@ const Header: React.FC = () => {
     <header className="bg-primary-subtle text-primary-emphasis py-2">
       <div className="container-fluid d-flex justify-content-between align-items-center">
        <div className="d-flex align-items-center">
-          <img src="../../public/logo2.png" alt="Logo" className="me-1" style={{ height: '50px' }} />
+          <img src="/logo2.png" alt="Logo" className="me-1" style={{ height: '50px' }} />
           <h1 className="h4">Wusha</h1>
         </div>
         <nav>

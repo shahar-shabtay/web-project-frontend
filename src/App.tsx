@@ -1,19 +1,22 @@
 import React from 'react';
-import Header from './components/header';
-import Footer from './components/footer';
+import SignIn from './components/signIn';
+import SignUp from './components/signUp';
+import Home from './components/home';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const App: React.FC = () => {
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <Header />
-      <main className="flex-grow-1">
-        <div className="container py-4">
-          <h2>Welcome to the Wusha website!</h2>
-          <p>This is the main content of the app.</p>
-        </div>
-      </main>
-      <Footer />
-    </div>
+    <Router>
+      <div className="d-flex flex-column min-vh-100">
+        <main className="flex-grow-1">
+          <Routes>
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/" element={<Home />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 };
 
