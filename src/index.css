@@ -2,11 +2,9 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -15,24 +13,25 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #7b3809;
   text-decoration: inherit;
 }
+
 a:hover {
-  color: #535bf2;
+  color: #800000;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  margin: 0; /* Remove default margin */
 }
 
 button {
@@ -46,9 +45,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: #800000;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -56,13 +57,64 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: #8B4513	;
     background-color: #ffffff;
   }
+
   a:hover {
-    color: #747bff;
+    color: #800000;
   }
+
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* Header Styles */
+.header {
+  background-color: #DEB887;
+  width: 100%;
+  padding: 10px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.container-fluid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+h1 {
+  font-size: 1.8rem;
+  color: #8B4513;
+  margin: 0;
+}
+
+.logo {
+  height: 50px;
+  margin-right: 10px;
+}
+
+/* Navigation container */
+a.navigation {
+  display: flex; /* Arrange items in a row */
+  gap: 15px; /* Add space between links */
+  align-items: center; /* Center links vertically */
+}
+
+a.nav-link {
+  color: #7b3809;
+  font-size: 1.1rem;
+  text-decoration: none;
+  margin: 0 15px;
+  transition: color 0.3s ease;
+}
+
+a.nav-link:hover {
+  color: #800000;
+  text-decoration: underline;
 }

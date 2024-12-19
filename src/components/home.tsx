@@ -8,8 +8,8 @@ const home: React.FC = () => {
       <Header />
       <main className="flex-grow-1">
         <div className="container py-4">
-          <h2>Welcome to the Wusha App!</h2>
-          <p>This is the main content of the app.</p>
+          <h2>Welcome to the DoggoDopt App!</h2>
+          <p>The best place for you to adopt a dog!</p>
         </div>
       </main>
       <Footer />
