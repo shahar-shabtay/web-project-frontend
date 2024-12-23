@@ -1,0 +1,84 @@
+.post {
+    background-color: #fff;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  .post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .add-post-btn {
+    background-color: #DEB887; 
+    color: #800000; /* Text color */
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .add-post-btn:hover {
+    background-color: #8b532a; /* Hover effect */
+  }
+  
+  .like-button {
+    background-color: #800000; /* Coral color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .like-button:hover {
+    background-color: #531818; /* Darker coral color for hover effect */
+  }
+  
+  .share-button,
+  .comment-button {
+    background-color: #DEB887; /* Coral color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .share-button:hover,
+  .comment-button:hover {
+    background-color: #8b532a; /* Darker coral color for hover effect */
+  }
+  
+  .card-container {
+    width: 100%;
+    max-width: 800px; /* Maximum width of the card */
+    margin: 0 auto; /* Center horizontally */
+    padding: 1.5rem; /* Padding inside the card */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Card shadow */
+    background-color: #fff; /* Background color for the card */
+    border-radius: 8px; /* Rounded corners for the card */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card-content {
+    width: 100%;
+    padding: 1rem; /* Padding for card content */
+  }
+  
+  .post-actions {
+    display: flex;
+    justify-content: space-evenly; /* Evenly spaces the buttons */
+    align-items: center; /* Centers the buttons vertically */
+    margin-top: 1rem; /* Adds spacing from the content above */
+  }
+  
