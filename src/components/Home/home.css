@@ -82,3 +82,40 @@
     margin-top: 1rem; /* Adds spacing from the content above */
   }
   
+  .comment-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+  }
+  
+  .comment-input {
+    width: 70%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-right: 1rem;
+  }
+  
+  .comment-button {
+    padding: 0.5rem 1rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .comment-button:hover {
+    background-color: #218838;
+  }
+  
+  .comments {
+    margin-top: 1rem;
+  }
+  
+  .comment {
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
