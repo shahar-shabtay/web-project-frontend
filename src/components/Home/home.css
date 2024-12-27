@@ -39,8 +39,7 @@
     background-color: #531818; /* Darker coral color for hover effect */
   }
   
-  .share-button,
-  .comment-button {
+  .share-button {
     background-color: #DEB887; /* Coral color */
     color: white;
     border: none;
@@ -96,29 +95,7 @@
     border: 1px solid #ccc;
     margin-right: 1rem;
   }
-  
-  .comment-button {
-    padding: 0.5rem 1rem;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .comment-button:hover {
-    background-color: #218838;
-  }
-  
-  .comments {
-    margin-top: 1rem;
-  }
-  
-  .comment {
-    font-size: 0.9rem;
-    color: #555;
-  }
-  
+          
   .success-popup {
     position: fixed;
     top: 20%;
@@ -130,6 +107,10 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Card shadow */
+    background-color: #fff; /* Background color for the card */
+    border-radius: 8px; /* Rounded corners for the card */
+
   }
   
   .success-popup p {
@@ -138,5 +119,57 @@
   
   .success-popup button {
     padding: 5px 10px;
+    color: #f1f1f1;
+    background-color: #531818;
+    border-color: #f1f1f1;
   }
+
+  .comment-section {
+    margin-top: 10px;
+  }
+  
+  .add-comment {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .comment-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+  
+  .comment-button {
+    color: #f1f1f1;
+    background-color: #8b532a;
+    border-color: #f1f1f1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .comment-button:hover {
+    background-color: #6f3308;
+  }
+  
+  .comments {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column; /* Stacks comments vertically */
+    gap: 5px;
+  }
+  
+  .comment {
+    padding: 5px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+
   

@@ -126,7 +126,7 @@ const Home: React.FC = () => {
                 </button>
               </div>
 
-              {/* Display Comments */}
+              {/* Display Comments Below the Input/Buttons */}
               <div className="comments">
                 {post.comments &&
                   post.comments.map((comment: any, index: number) => (
@@ -144,3 +144,4 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+ 
