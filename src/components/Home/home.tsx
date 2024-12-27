@@ -37,7 +37,6 @@ const Home: React.FC = () => {
       // Replace `commenter` with the current user's name dynamically
       // TO DO - after finish user parts 
       //const commenter = currentUserName; // Assume `currentUserName` holds the logged-in user's name
-  // Handle comment submission
   const handleComment = (postId: string) => {
     const commentContent = newComments[postId]?.trim(); // Get the comment for this post
     if (commentContent) {
@@ -93,7 +92,13 @@ const Home: React.FC = () => {
       )}
 
       <div className="card-container">
-        <h2 className="text-center mb-4">Share, Like, and Comment on Posts</h2>
+        {/* Add Logo Image */}
+        <img
+          src="/full_logo.png" 
+          alt="Logo"
+          className="full-logo"
+        />
+        {/* <h2 className="text-center mb-4 small-title">Share, Like, and Comment on Posts</h2> */}
         <button className="add-post-btn">Add New Post</button>
 
         {/* Render Posts */}

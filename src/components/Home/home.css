@@ -50,8 +50,7 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
-  .share-button:hover,
-  .comment-button:hover {
+  .share-button:hover {
     background-color: #8b532a; /* Darker coral color for hover effect */
   }
   
@@ -172,4 +171,16 @@
     border: 1px solid #ddd;
   }
 
+  .logo-container{
+    text-align: center; /* Centers the logo horizontally */
+    margin-bottom: 20px; /* Adds space below the logo */  
+
+  }
+  .full-logo {
+    width: 30%; /* Adjust the width of the logo as needed */
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    
+  }
   
