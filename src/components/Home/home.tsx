@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './home.css';
 import Header from '../header';
 import axios from 'axios';
+import CreatePostPage from '../../pages/CreatePostPage';
 
 const Home: React.FC = () => {
   // State to manage the posts
@@ -13,15 +14,16 @@ const Home: React.FC = () => {
   // Fetch posts when the component mounts
   useEffect(() => {
     axios
-      .get('http://localhost:3000/posts') // backend URL
+      .get('http://localhost:3000/posts') // Backend URL
       .then((response) => {
+        console.log('Fetched Posts:', response.data);
         setPosts(response.data); // Set fetched posts
       })
       .catch((error) => {
-        console.error('There was an error fetching the posts:', error);
+        console.error('Error fetching the posts:', error);
       });
   }, []);
-
+          
   // // Handle like functionality - TO DO after add like to backend 
   // const handleLike = (postId: string) => {
   //   axios.put(`http://localhost:3000/posts/${postId}/like`) // Replace with your backend URL
@@ -92,31 +94,24 @@ const Home: React.FC = () => {
       )}
 
       <div className="card-container">
-        {/* Add Logo Image */}
         <img
-          src="/full_logo.png" 
+          src="/full_logo.png"
           alt="Logo"
           className="full-logo"
         />
-        {/* <h2 className="text-center mb-4 small-title">Share, Like, and Comment on Posts</h2> */}
-        <button className="add-post-btn">Add New Post</button>
 
-        {/* Render Posts */}
+        <CreatePostPage /> {/* This is where CreatePostPage is used to handle post creation */}
+
         {posts.map((post) => (
           <div key={post._id} className="post border rounded p-3 mb-3">
             <h4 className="post-title mb-2">{post.title}</h4>
             <p className="post-description mb-2">{post.description}</p>
 
             <div className="post-actions">
-              {/* Like Button */}
-              {/* Uncomment when handleLike is implemented */}
-              {/* <button className="like-button" onClick={() => handleLike(post._id)}>Like ({post.likes})</button> */}
-
-              {/* Comment Section */}
               <div className="comment-section">
                 <input
                   type="text"
-                  value={newComments[post._id] || ''} // Track comment for each post
+                  value={newComments[post._id] || ''}
                   onChange={(e) =>
                     setNewComments({ ...newComments, [post._id]: e.target.value })
                   }
@@ -131,7 +126,6 @@ const Home: React.FC = () => {
                 </button>
               </div>
 
-              {/* Display Comments Below the Input/Buttons */}
               <div className="comments">
                 {post.comments &&
                   post.comments.map((comment: any, index: number) => (
@@ -149,4 +143,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
- 
