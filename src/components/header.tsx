@@ -1,7 +1,21 @@
 import React from 'react';
 import '../index.css'
+import Cookies from 'js-cookie';
+// import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
+
+  // const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    // Clear the authentication cookies
+    Cookies.remove('accessToken', { path: '/' });
+    Cookies.remove('refreshToken', { path: '/' });
+
+    // Redirect to the sign-in page
+    // navigate('/signin');
+  };
+
   return (
     <header className="header">
       <div className="container-fluid d-flex justify-content-between align-items-center">
@@ -13,6 +27,7 @@ const Header: React.FC = () => {
           <a href="/" className="nav-link">Home</a>
           <a href="/about" className="nav-link">About</a>
           <a href="/contact" className="nav-link">Contact</a>
+          <a href="/signin" className="nav-link" onClick={handleSignOut}>SignOut</a>
         </nav>
       </div>
     </header>
