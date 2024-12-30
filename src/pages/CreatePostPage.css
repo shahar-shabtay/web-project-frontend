@@ -9,6 +9,43 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
+  .create-post-form{
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    color: black;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .create-post-btn{
+    background-color: #DEB887; 
+    color: #800000; /* Text color */
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .create-post-btn:hover{
+    background-color: #8b532a;
+  }
+
+  .post-box{
+    width: 70%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+    margin-right: 1rem;
+    background-color: #ccc;
+    color: black;
+  }
   
   .form-title {
     font-size: 24px;

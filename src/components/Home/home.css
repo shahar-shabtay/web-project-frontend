@@ -1,27 +1,3 @@
-.post {
-    background-color: #fff;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  }
-  
-  .post:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .add-post-btn {
-    background-color: #DEB887; 
-    color: #800000; /* Text color */
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  
-  .add-post-btn:hover {
-    background-color: #8b532a; /* Hover effect */
-  }
   
   .like-button {
     background-color: #800000; /* Coral color */
