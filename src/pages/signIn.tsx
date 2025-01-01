@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-
-interface GoogleCredentialResponse {
-  credential: string;
-  clientId: string;
-  select_by: string;
-}
+import { GoogleOAuthProvider, GoogleLogin , CredentialResponse } from '@react-oauth/google';
 
 const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
   const [email, setEmail] = useState('');
@@ -36,8 +30,6 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
         Cookies.set('accessToken', data.accessToken, { path: '/', secure: true, sameSite: 'Strict' });
         Cookies.set('refreshToken', data.refreshToken, { path: '/', secure: true, sameSite: 'Strict' });
 
-        console.log(Cookies.get('accessToken'));
-
         onSignIn();
         setSuccess('Login successful! Redirecting...');
         setError('');
@@ -53,19 +45,17 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
     }
   };
 
-  const handleGoogleLoginSuccess = (credentialResponse: GoogleCredentialResponse) => {
-    console.log('Google Login Success:', credentialResponse);
-    Cookies.set('accessToken', credentialResponse.credential, { path: '/', secure: true, sameSite: 'Strict' });
-
-    // Handle Google login response here (e.g., send to backend for verification)
-    onSignIn();
-    setSuccess('Google login successful! Redirecting...');
-    setTimeout(() => navigate('/'), 2000);
-  };
-
-  const handleGoogleLoginFailure = () => {
-    console.log('Google Login Failed');
-    setError('Google login failed. Please try again.');
+  const handleGoogleLoginSuccess = (credentialResponse: CredentialResponse) => {
+  
+    if (credentialResponse.credential) {
+      Cookies.set('accessToken', credentialResponse.credential, { path: '/', secure: true, sameSite: 'Strict' });
+      onSignIn();
+      setSuccess('Google login successful! Redirecting...');
+      setTimeout(() => navigate('/'), 2000);
+    } else {
+      console.error('Google login failed: No credential received');
+      setError('Google login failed. Please try again.');
+    }
   };
 
   return (
@@ -103,10 +93,7 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
             <button type="submit" className="btn btn-primary w-100 mb-3">Sign In</button>
           </form>
           <div className="text-center mb-3">
-            <GoogleLogin 
-              onSuccess={handleGoogleLoginSuccess}
-              onError={handleGoogleLoginFailure}
-            />
+            <GoogleLogin onSuccess={handleGoogleLoginSuccess} />
           </div>
           <div className="mt-3 text-center">
             <a href="/forgot-password" className="text-decoration-none">Forgot Password?</a>
