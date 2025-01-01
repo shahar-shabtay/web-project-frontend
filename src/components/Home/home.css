@@ -1,0 +1,182 @@
+  
+  .like-button {
+    background-color: #800000; /* Coral color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .like-button:hover {
+    background-color: #531818; /* Darker coral color for hover effect */
+  }
+  
+  .share-button {
+    background-color: #DEB887; /* Coral color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .share-button:hover {
+    background-color: #8b532a; /* Darker coral color for hover effect */
+  }
+  
+  .card-container {
+    width: 100%;
+    max-width: 800px; /* Maximum width of the card */
+    margin: 0 auto; /* Center horizontally */
+    padding: 1.5rem; /* Padding inside the card */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Card shadow */
+    background-color: #fff; /* Background color for the card */
+    border-radius: 8px; /* Rounded corners for the card */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card-content {
+    width: 100%;
+    padding: 1rem; /* Padding for card content */
+  }
+  
+  .post-actions {
+    display: flex;
+    justify-content: space-evenly; /* Evenly spaces the buttons */
+    align-items: center; /* Centers the buttons vertically */
+    margin-top: 1rem; /* Adds spacing from the content above */
+  }
+  
+  .comment-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+  }
+  
+  .comment-input {
+    width: 70%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-right: 1rem;
+  }
+          
+  .success-popup {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -20%);
+    background: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Card shadow */
+    background-color: #fff; /* Background color for the card */
+    border-radius: 8px; /* Rounded corners for the card */
+
+  }
+  
+  .success-popup p {
+    margin-bottom: 10px;
+  }
+  
+  .success-popup button {
+    padding: 5px 10px;
+    color: #f1f1f1;
+    background-color: #531818;
+    border-color: #f1f1f1;
+  }
+
+  .comment-section {
+    margin-top: 10px;
+  }
+  
+  .add-comment {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .comment-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+  
+  .comment-button {
+    color: #f1f1f1;
+    background-color: #8b532a;
+    border-color: #f1f1f1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .comment-button:hover {
+    background-color: #6f3308;
+  }
+  
+  .comments {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column; /* Stacks comments vertically */
+    gap: 5px;
+  }
+  
+  .comment {
+    padding: 5px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+
+  .logo-container{
+    text-align: center; /* Centers the logo horizontally */
+    margin-bottom: 20px; /* Adds space below the logo */  
+
+  }
+  .full-logo {
+    width: 30%; /* Adjust the width of the logo as needed */
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    
+  }
+  
+  .modal {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 500px;
+    width: 100%;
+  }
+  

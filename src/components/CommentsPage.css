@@ -1,0 +1,84 @@
+/* CommentsPage.css */
+
+/* General styling for the comments page */
+.comments-page {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Back button styling */
+.comments-page .btn {
+  margin-bottom: 15px;
+  font-size: 14px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.comments-page .btn:hover {
+  background-color: #0056b3;
+}
+
+/* Header styling */
+.comments-page h3 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Comments list styling */
+.comments-page ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+
+.comments-page ul li {
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.comments-page ul li strong {
+  color: #007bff;
+}
+
+/* Input and button styling for adding comments */
+.comments-page div {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.comments-page input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.comments-page button {
+  padding: 10px 20px;
+  font-size: 14px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.comments-page button:hover {
+  background-color: #218838;
+}
+
