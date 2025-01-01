@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import SignIn from './components/signIn';
 import SignUp from './components/signUp';
-import Home from './components/home';
+import Home from './components/Home/home';
+import CommentsPage from './components/CommentsPage';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -34,6 +35,7 @@ const App: React.FC = () => {
             <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/signin" />} />
             <Route path="/signin" element={<SignIn onSignIn={() => setIsAuthenticated(true)} />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/comments/:postId" element={<CommentsPage />} />
           </Routes>
         </main>
       </div>
