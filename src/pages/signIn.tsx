@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 import { GoogleOAuthProvider, GoogleLogin , CredentialResponse } from '@react-oauth/google';
 
 const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
@@ -10,23 +11,18 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
+  // Handle a submit of sign in button
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const requestBody = { email, password };
-
     try {
-      const response = await fetch('http://localhost:3000/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axios.post('http://localhost:3000/auth/login', requestBody,
+        { headers: {'Content-Type': 'application/json'},
+          withCredentials: true }
+      );
+  
+      if (response.status === 200) {
+        const data = response.data;
         Cookies.set('accessToken', data.accessToken, { path: '/', secure: true, sameSite: 'Strict' });
         Cookies.set('refreshToken', data.refreshToken, { path: '/', secure: true, sameSite: 'Strict' });
 
@@ -45,17 +41,33 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
     }
   };
 
-  const handleGoogleLoginSuccess = (credentialResponse: CredentialResponse) => {
+  // Handle a google sign in
+  const handleGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
+    let res;
+
+    res = await axios.post('http://localhost:3000/auth/google', {credential: credentialResponse.credential,});
+
+    try {
+      
+      // If this is a new user, sign up first
+      if (res.status === 201) {
+        res = await axios.post('http://localhost:3000/auth/google', {credential: credentialResponse.credential,});
+      } 
   
-    if (credentialResponse.credential) {
-      Cookies.set('accessToken', credentialResponse.credential, { path: '/', secure: true, sameSite: 'Strict' });
+      const data = res.data;
+      Cookies.set('accessToken', data.accessToken, { path: '/', secure: true, sameSite: 'Strict' });
+      Cookies.set('refreshToken', data.refreshToken, { path: '/', secure: true, sameSite: 'Strict' });
+  
       onSignIn();
-      setSuccess('Google login successful! Redirecting...');
+      setSuccess('Login successful! Redirecting...');
+      setError('');
       setTimeout(() => navigate('/'), 2000);
-    } else {
-      console.error('Google login failed: No credential received');
-      setError('Google login failed. Please try again.');
+    } catch (error) {
+      console.error('Login error:', error);
+      setSuccess('');
+      setError('An error occurred. Please try again later.');
     }
+
   };
 
   return (
