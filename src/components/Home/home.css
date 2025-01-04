@@ -180,3 +180,18 @@
     width: 100%;
   }
   
+  .like-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .like-button {
+    margin-right: 10px;
+  }
+  
+  .like-button:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+  

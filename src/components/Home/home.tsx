@@ -9,6 +9,7 @@ const Home: React.FC = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [newComments, setNewComments] = useState<{ [key: string]: string }>({});
   const [showSuccess, setShowSuccess] = useState(false);
+  const [likedPosts, setLikedPosts] = useState<{ [postId: string]: boolean }>({});
   const navigate = useNavigate();
 
   // Fetch posts when the component mounts
@@ -75,6 +76,52 @@ const Home: React.FC = () => {
         });
     }
   };
+
+  const handleLike = (postId: string) => {
+    const isLiked = likedPosts[postId];
+    setLikedPosts({ ...likedPosts, [postId]: !isLiked });
+
+    // Trigger your API call to update like count
+    likePostAPI(postId, !isLiked)
+      .then((updatedLikeCount) => {
+        console.log('Post liked successfully!');
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post._id === postId
+              ? { ...post, likeCount: updatedLikeCount }
+              : post
+          )
+        );
+      })
+      .catch((err) => {
+        console.error('Error liking post:', err);
+        setLikedPosts({ ...likedPosts, [postId]: isLiked }); // Revert on error
+      });
+  };
+
+  const likePostAPI = async (postId: string, isLiked: boolean) => {
+    // Add your API logic for liking a post here
+    console.log(`API call to like post with ID: ${postId}, isLiked: ${isLiked}`);
+
+    // Mock API response with updated like count (for example)
+    return Promise.resolve(isLiked ? 1 : 0);  // Mocking like count: 1 if liked, 0 if unliked
+};
+
+  // const likePostAPI = async (postId: string, liked: boolean) => {
+  //   // Add your API logic for liking a post here
+  //   console.log(`API call to like post with ID: ${postId}, Liked: ${liked}`);
+    
+  //   // For example, update the like count in the backend and return the new like count
+  //   try {
+  //     const response = await axios.post(
+  //       `http://localhost:3000/posts/like/${postId}`,
+  //       { liked }
+  //     );
+  //     return response.data.likeCount; // Assuming the API returns the updated like count
+  //   } catch (error) {
+  //     throw new Error('Error updating like count');
+  //   }
+  // };
   
   return (
     <div className="d-flex flex-column align-items-center bg-light vh-100 p-4">
@@ -98,6 +145,26 @@ const Home: React.FC = () => {
             <h4 className="post-title mb-2">{post.title}</h4>
             <p className="post-description mb-2">{post.description}</p>
             <div className="post-actions">
+            <div className="like-section">
+            <button
+                className="like-button btn"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  cursor: 'pointer',
+                }}
+                onClick={() => handleLike(post._id)}
+              >
+                <img
+                  src={likedPosts[post._id] ? '/after_like.png' : '/before_like.png'}
+                  alt={likedPosts[post._id] ? 'Liked' : 'Like'}
+                  style={{ width: '24px', height: '24px' }}
+                />
+              </button>
+              <span>{likedPosts[post._id] ? 1 : 0} Likes</span>
+                {/* <span>{post.likeCount || 0} Likes</span> */}
+              </div>
               <div className="comment-section">
                 <input
                   type="text"
