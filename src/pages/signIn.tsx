@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-
-interface GoogleCredentialResponse {
-  credential: string;
-  clientId: string;
-  select_by: string;
-}
+import axios from 'axios';
+import { GoogleOAuthProvider, GoogleLogin , CredentialResponse } from '@react-oauth/google';
 
 const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
   const [email, setEmail] = useState('');
@@ -16,27 +11,20 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
+  // Handle a submit of sign in button
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const requestBody = { email, password };
-
     try {
-      const response = await fetch('http://localhost:3000/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axios.post('http://localhost:3000/auth/login', requestBody,
+        { headers: {'Content-Type': 'application/json'},
+          withCredentials: true }
+      );
+  
+      if (response.status === 200) {
+        const data = response.data;
         Cookies.set('accessToken', data.accessToken, { path: '/', secure: true, sameSite: 'Strict' });
         Cookies.set('refreshToken', data.refreshToken, { path: '/', secure: true, sameSite: 'Strict' });
-
-        console.log(Cookies.get('accessToken'));
 
         onSignIn();
         setSuccess('Login successful! Redirecting...');
@@ -53,19 +41,33 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
     }
   };
 
-  const handleGoogleLoginSuccess = (credentialResponse: GoogleCredentialResponse) => {
-    console.log('Google Login Success:', credentialResponse);
-    Cookies.set('accessToken', credentialResponse.credential, { path: '/', secure: true, sameSite: 'Strict' });
+  // Handle a google sign in
+  const handleGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
+    let res;
 
-    // Handle Google login response here (e.g., send to backend for verification)
-    onSignIn();
-    setSuccess('Google login successful! Redirecting...');
-    setTimeout(() => navigate('/'), 2000);
-  };
+    res = await axios.post('http://localhost:3000/auth/google', {credential: credentialResponse.credential,});
 
-  const handleGoogleLoginFailure = () => {
-    console.log('Google Login Failed');
-    setError('Google login failed. Please try again.');
+    try {
+      
+      // If this is a new user, sign up first
+      if (res.status === 201) {
+        res = await axios.post('http://localhost:3000/auth/google', {credential: credentialResponse.credential,});
+      } 
+  
+      const data = res.data;
+      Cookies.set('accessToken', data.accessToken, { path: '/', secure: true, sameSite: 'Strict' });
+      Cookies.set('refreshToken', data.refreshToken, { path: '/', secure: true, sameSite: 'Strict' });
+  
+      onSignIn();
+      setSuccess('Login successful! Redirecting...');
+      setError('');
+      setTimeout(() => navigate('/'), 2000);
+    } catch (error) {
+      console.error('Login error:', error);
+      setSuccess('');
+      setError('An error occurred. Please try again later.');
+    }
+
   };
 
   return (
@@ -103,10 +105,7 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
             <button type="submit" className="btn btn-primary w-100 mb-3">Sign In</button>
           </form>
           <div className="text-center mb-3">
-            <GoogleLogin 
-              onSuccess={handleGoogleLoginSuccess}
-              onError={handleGoogleLoginFailure}
-            />
+            <GoogleLogin onSuccess={handleGoogleLoginSuccess} />
           </div>
           <div className="mt-3 text-center">
             <a href="/forgot-password" className="text-decoration-none">Forgot Password?</a>

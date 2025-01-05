@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import SignIn from './components/signIn';
-import SignUp from './components/signUp';
+import SignIn from './pages/signIn';
+import SignUp from './pages/signUp';
 import Home from './components/Home/home';
 import CommentsPage from './components/CommentsPage';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
@@ -18,10 +18,7 @@ const App: React.FC = () => {
       const accessToken = Cookies.get('accessToken');
       setIsAuthenticated(accessToken !== undefined);
     };
-
-    // Optionally, you can add an event listener to re-check auth when cookies change
     window.addEventListener('cookiechange', checkAuth);
-
     return () => {
       window.removeEventListener('cookiechange', checkAuth);
     };

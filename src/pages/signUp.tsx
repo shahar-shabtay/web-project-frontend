@@ -43,7 +43,7 @@ const SignUp: React.FC = () => {
       setSuccess('');
 
       // Handle errors
-      if (err?.status === 400) {
+      if (axios.isAxiosError(err) && err.response?.status === 400) {
         setError('User already exists! please sign in or try another email.');
       } else {
         setError('Failed to sign up. Please try again.');
