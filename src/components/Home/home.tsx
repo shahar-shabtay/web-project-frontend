@@ -35,12 +35,13 @@ const Home: React.FC = () => {
               );
             })
             .catch((error) => {
-              console.error(`Error fetching comments for post ${post._id}:`, error);
+              console.error(`Error fetching comments for post HomePage ${post._id}:`, error);
             });
-        });
+        }
+        );
       })
       .catch((error) => {
-        console.error('Error fetching the posts:', error);
+        console.error('HomePage2 Error fetching the posts:', error);
       });
   }, []);
 

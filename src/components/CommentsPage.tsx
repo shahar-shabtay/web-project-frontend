@@ -15,11 +15,12 @@ useEffect(() => {
         axios
             .get(`http://localhost:3000/comments/comment/${postId}`) // Updated route
             .then((response) => {
+                console.log("This is post id from comment.tsx: ${postId}")
                 console.log("Fetched comments:", response.data); // Log the response to check if data is correct
                 setComments(response.data); // Assuming API returns an array of comments
             })
             .catch((error) => {
-                console.error(`Error fetching comments for post ${postId}:`, error);
+                console.error(`Error fetching comments for post commentPage ${postId}:`, error);
             });
     }
 }, [postId]);
