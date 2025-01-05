@@ -11,7 +11,7 @@ const CreatePostPage: React.FC = () => {
     event.preventDefault();
 
     const postData = { title, content, owner };
-    const accessToken = Cookies.get("accessToken"); // Get token from cookies
+    const accessToken = Cookies.get("accessToken");
 
     if (!accessToken) {
       console.error("No access token found. Please log in.");
@@ -23,7 +23,7 @@ const CreatePostPage: React.FC = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`, // Include token in Authorization header
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(postData),
       });
