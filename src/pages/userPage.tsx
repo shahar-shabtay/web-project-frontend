@@ -132,8 +132,8 @@ const UserPage = () => {
       <div className="container mt-5">
         <div className="card p-3">
           <div className="card-body">
-            <h5 className="card-title text-center mb-4">User Posts</h5> {/* Centered Title */}
-            <div className="w-100"> {/* Full-width container for posts */}
+            <h5 className="card-title text-center mb-4">User Posts</h5>
+            <div className="w-100">
               <Posts posts={posts} />
             </div>
           </div>
