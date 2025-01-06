@@ -4,9 +4,18 @@ import Header from '../header';
 import axios from 'axios';
 import CreatePostPage from '../../pages/CreatePostPage';
 import { useNavigate } from 'react-router-dom';
+import Posts from '../posts';
 
 const Home: React.FC = () => {
-  const [posts, setPosts] = useState<any[]>([]);
+  interface Post {
+    _id: string;
+    title: string;
+    content: string;
+    comments?: { commenter: string; content: string }[];
+    commentCount?: number;
+  }
+
+  const [posts, setPosts] = useState<Post[]>([]);
   const [newComments, setNewComments] = useState<{ [key: string]: string }>({});
   const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
@@ -20,7 +29,7 @@ const Home: React.FC = () => {
         setPosts(fetchedPosts);
 
         // Fetch comment counts for each post
-        fetchedPosts.forEach((post: any) => {
+        fetchedPosts.forEach((post: Post) => {
           axios
             .get(`http://localhost:3000/comments/comment/${post._id}`)
             .then((commentResponse) => {
@@ -75,7 +84,7 @@ const Home: React.FC = () => {
         });
     }
   };
-  
+
   return (
     <div className="d-flex flex-column align-items-center bg-light vh-100 p-4">
       <Header />
@@ -93,40 +102,7 @@ const Home: React.FC = () => {
       <div className="card-container">
         <img src="/full_logo.png" alt="Logo" className="full-logo" />
         <CreatePostPage />
-        {posts.map((post) => (
-          <div key={post._id} className="post border rounded p-3 mb-3">
-            <h4 className="post-title mb-2">{post.title}</h4>
-            <p className="post-description mb-2">{post.description}</p>
-            <div className="post-actions">
-              <div className="comment-section">
-                <input
-                  type="text"
-                  value={newComments[post._id] || ''}
-                  onChange={(e) =>
-                    setNewComments({ ...newComments, [post._id]: e.target.value })
-                  }
-                  placeholder="Add a comment..."
-                  className="comment-input"
-                />
-                <button
-                  className="comment-button"
-                  onClick={() => handleComment(post._id)}
-                >
-                  Comment
-                </button>
-              </div>
-              <div className="comments-overview">
-                <span>{post.commentCount || 0} comments</span>
-                <button
-                  className="btn btn-link"
-                  onClick={() => navigate(`/comments/${post._id}`)}
-                >
-                  View Comments
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
+        <Posts posts={posts} newComments={newComments} setNewComments={setNewComments} handleComment={handleComment} navigate={navigate} />
       </div>
     </div>
   );

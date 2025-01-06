@@ -82,36 +82,61 @@ const UserPage = () => {
         <div className="container mt-5">
           {error && <p className="text-danger">{error}</p>}
           {userInfo ? (
-        <div className="card p-3">
-          <div className="card-body">
-            <div className="d-flex justify-content-between">
-              <br />
-              <h5 className="card-title">User Information</h5>
-              <button className="btn btn-primary btn-sm" onClick={() => setIsEditing(!isEditing)}>
-                {isEditing ? 'Cancel' : 'Edit'}
-              </button>
+            <div className="card p-3">
+              <div className="card-body">
+                <div className="d-flex justify-content-between">
+                  <br />
+                  <h5 className="card-title">User Information</h5>
+                  <button className="btn btn-primary btn-sm" onClick={() => setIsEditing(!isEditing)}>
+                    {isEditing ? 'Cancel' : 'Edit'}
+                  </button>
+                </div>
+                <p className="card-text"><strong>Email:</strong> {userInfo.email}</p>
+                {isEditing ? (
+                  <div>
+                    <input type="text" name="username" className="form-control mb-2" value={formData.username}
+                      onChange={handleChange}/>
+                    <button className="btn btn-success btn-sm" onClick={updateUserInfo}>Save</button>
+                  </div>
+                ) : (<p className="card-text"><strong>Username:</strong> {userInfo.username}</p>)}
+              </div>
             </div>
-            <p className="card-text"><strong>Email:</strong> {userInfo.email}</p>
-            {isEditing ? (
-              <div>
+            ) : (<p>Loading...</p>)}
+        </div>
+        {posts.map((post) => (
+          <div key={post._id} className="post border rounded p-3 mb-3">
+            <h4 className="post-title mb-2">{post.title}</h4>
+            <p className="post-description mb-2">{post.description}</p>
+            <div className="post-actions">
+              <div className="comment-section">
                 <input
                   type="text"
-                  name="username"
-                  className="form-control mb-2"
-                  value={formData.username}
-                  onChange={handleChange}
+                  value={newComments[post._id] || ''}
+                  onChange={(e) =>
+                    setNewComments({ ...newComments, [post._id]: e.target.value })
+                  }
+                  placeholder="Add a comment..."
+                  className="comment-input"
                 />
-                <button className="btn btn-success btn-sm" onClick={updateUserInfo}>Save</button>
+                <button
+                  className="comment-button"
+                  onClick={() => handleComment(post._id)}
+                >
+                  Comment
+                </button>
               </div>
-            ) : (
-              <p className="card-text"><strong>Username:</strong> {userInfo.username}</p>
-            )}
+              <div className="comments-overview">
+                <span>{post.commentCount || 0} comments</span>
+                <button
+                  className="btn btn-link"
+                  onClick={() => navigate(`/comments/${post._id}`)}
+                >
+                  View Comments
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
+        ))}
         <Footer />
       </div>
     );
