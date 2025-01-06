@@ -3,7 +3,6 @@ import './home.css';
 import Header from '../header';
 import axios from 'axios';
 import CreatePostPage from '../../pages/CreatePostPage';
-import { useNavigate } from 'react-router-dom';
 import Posts from '../posts';
 
 const Home: React.FC = () => {
@@ -16,9 +15,7 @@ const Home: React.FC = () => {
   }
 
   const [posts, setPosts] = useState<Post[]>([]);
-  const [newComments, setNewComments] = useState<{ [key: string]: string }>({});
   const [showSuccess, setShowSuccess] = useState(false);
-  const navigate = useNavigate();
 
   // Fetch posts when the component mounts
   useEffect(() => {
@@ -52,39 +49,6 @@ const Home: React.FC = () => {
       });
   }, []);
 
-  const handleComment = (postId: string) => {
-    const commentContent = newComments[postId]?.trim();
-    if (commentContent) {
-      const commenter = 'shahar';
-      console.log("Adding comment to postId:", postId); // Log the postId
-      axios
-        .post(`http://localhost:3000/comments`, {
-          commenter,
-          postID: postId,
-          content: commentContent,
-        })
-        .then((response) => {
-          console.log("Comment added:", response.data); // Log the added comment data
-          setPosts((prevPosts) =>
-            prevPosts.map((post) =>
-              post._id === postId
-                ? {
-                    ...post,
-                    comments: [...(post.comments || []), response.data],
-                    commentCount: (post.commentCount || 0) + 1, // Update comment count
-                  }
-                : post
-            )
-          );
-          setNewComments({ ...newComments, [postId]: '' });
-          setShowSuccess(true);
-        })
-        .catch((error) => {
-          console.error('There was an error adding the comment:', error);
-        });
-    }
-  };
-
   return (
     <div className="d-flex flex-column align-items-center bg-light vh-100 p-4">
       <Header />
@@ -102,7 +66,7 @@ const Home: React.FC = () => {
       <div className="card-container">
         <img src="/full_logo.png" alt="Logo" className="full-logo" />
         <CreatePostPage />
-        <Posts posts={posts} newComments={newComments} setNewComments={setNewComments} handleComment={handleComment} navigate={navigate} />
+        <Posts posts={posts} />
       </div>
     </div>
   );

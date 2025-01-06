@@ -1,15 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Home/home.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-interface PostsProps {
-  posts: { _id: string; title: string; content: string; commentCount?: number }[];
-  newComments: { [key: string]: string };
-  setNewComments: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
-  handleComment: (postId: string) => void;
-  navigate: (path: string) => void;
+interface Post {
+  _id: string;
+  title: string;
+  content: string;
+  commentCount?: number;
+  comments?: { commenter: string; content: string }[];
 }
 
-const Posts: React.FC<PostsProps> = ({ posts, newComments, setNewComments, handleComment, navigate }) => {
+interface PostsProps {
+  posts: Post[];
+}
+
+const Posts: React.FC<PostsProps> = ({ posts }) => {
+  const [newComments, setNewComments] = useState<{ [key: string]: string }>({});
+  const navigate = useNavigate();
+
+  const handleComment = (postId: string) => {
+    const commentContent = newComments[postId]?.trim();
+    if (commentContent) {
+      const commenter = 'shahar';
+      console.log("Adding comment to postId:", postId); // Log the postId
+      axios
+        .post(`http://localhost:3000/comments`, {
+          commenter,
+          postID: postId,
+          content: commentContent,
+        })
+        .then((response) => {
+          console.log("Comment added:", response.data); // Log the added comment data
+          // Update post state after comment is added
+          setNewComments({ ...newComments, [postId]: '' });
+        })
+        .catch((error) => {
+          console.error('There was an error adding the comment:', error);
+        });
+    }
+  };
+
   return (
     <div>
       {posts.map((post) => (
