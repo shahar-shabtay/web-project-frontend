@@ -1,0 +1,34 @@
+.header {
+    padding: 10px 20px;
+    background-color: #f8f9fa; /* Light background */
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .header .logo {
+    height: 40px;
+    margin-right: 10px;
+  }
+  
+  .header .headline {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  nav a.nav-link {
+    color: #007bff; /* Bootstrap primary color */
+    text-decoration: none;
+    padding: 5px 10px;
+    transition: color 0.2s;
+  }
+  
+  nav a.nav-link:hover {
+    color: #0056b3;
+  }
+  
+  nav {
+    display: flex; /* Ensures links are in a row */
+    gap: 15px; /* Adds spacing between links */
+  }
+  
