@@ -43,13 +43,10 @@ const UserPage = () => {
   // Fetch user info
   const fetchUserInfo = async () => {
     try {
-
-      // Fetch user info from backend
-      const response = await axios.get(`http://localhost:3000/users/${userId}`, {
-        headers: {Authorization: `Bearer ${accessToken}`}
-      });
-
-      setFormData({ username: response.data.username });
+    const response = await axios.get(`http://localhost:3000/users/${userId}`, {
+      headers: {Authorization: `Bearer ${accessToken}`}
+    });
+    setFormData({ username: response.data.username });
       setUserInfo(response.data);
     } catch (err) {
       console.error(err);
@@ -80,8 +77,6 @@ const UserPage = () => {
   // Fetch user posts
   const fetchUserPosts = async () => {
     try {
-
-      // Fetch user posts from backend
       const response = await axios.get(`http://localhost:3000/posts`, {
         params: { owner: userId },
         headers: { Authorization: `Bearer ${accessToken}` }
@@ -89,14 +84,12 @@ const UserPage = () => {
 
       const fetchedPosts = response.data;
       setPosts(fetchedPosts);
-
+      
     } catch (err) {
       console.error(err);
       setError('Failed to fetch user posts');
     }
   };
-
-
 
   // Fetch posts and user info when the component mounts
   useEffect(() => {
@@ -136,7 +129,16 @@ const UserPage = () => {
           </div>
           ) : (<p>Loading...</p>)}
       </div>
-      <Posts posts={posts}/>
+      <div className="container mt-5">
+        <div className="card p-3">
+          <div className="card-body">
+            <h5 className="card-title text-center mb-4">User Posts</h5> {/* Centered Title */}
+            <div className="w-100"> {/* Full-width container for posts */}
+              <Posts posts={posts} />
+            </div>
+          </div>
+        </div>
+      </div>
       <Footer />
     </div>
   );

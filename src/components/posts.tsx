@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Home/home.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -16,8 +16,32 @@ interface PostsProps {
 }
 
 const Posts: React.FC<PostsProps> = ({ posts }) => {
-  const [newComments, setNewComments] = useState<{ [key: string]: string }>({});
-  const navigate = useNavigate();
+    const [newComments, setNewComments] = useState<{ [key: string]: string }>({});
+    const [updatedPosts, setUpdatedPosts] = useState<Post[]>(posts);
+    const navigate = useNavigate();
+
+  // Fetch comment counts for each post
+  useEffect(() => {
+    setUpdatedPosts(posts);
+    const fetchCommentCounts = async () => {
+      for (const post of posts) {
+        try {
+          const commentResponse = await axios.get(`http://localhost:3000/comments/comment/${post._id}`);
+          setUpdatedPosts((prevPosts) =>
+            prevPosts.map((p) =>
+              p._id === post._id
+                ? { ...p, commentCount: commentResponse.data.length }
+                : p
+            )
+          );
+        } catch (error) {
+          console.error(`Error fetching comments for post ${post._id}:`, error);
+        }
+      }
+    };
+
+    fetchCommentCounts();
+  }, [posts]); // Runs only when `posts` prop changes
 
   const handleComment = (postId: string) => {
     const commentContent = newComments[postId]?.trim();
@@ -33,6 +57,17 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
         .then((response) => {
           console.log("Comment added:", response.data); // Log the added comment data
           // Update post state after comment is added
+          setUpdatedPosts((prevPosts) =>
+            prevPosts.map((post) =>
+              post._id === postId
+                ? {
+                    ...post,
+                    comments: [...(post.comments || []), response.data],
+                    commentCount: (post.commentCount || 0) + 1, // Update comment count
+                  }
+                : post
+            )
+          );
           setNewComments({ ...newComments, [postId]: '' });
         })
         .catch((error) => {
@@ -43,7 +78,7 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
 
   return (
     <div>
-      {posts.map((post) => (
+      {updatedPosts.map((post) => (
         <div key={post._id} className="post border rounded p-3 mb-3">
           <h4 className="post-title mb-2">{post.title}</h4>
           <p className="post-content mb-2">{post.content}</p>
