@@ -1,9 +1,9 @@
 import React, { useState , useEffect } from 'react';
-import axios from 'axios';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import Cookies from "js-cookie";
 import Posts from '../components/posts';
+import axiosInstance from '../api/axiosInstance'
 
 const UserPage = () => {
   
@@ -43,10 +43,8 @@ const UserPage = () => {
   // Fetch user info
   const fetchUserInfo = async () => {
     try {
-    const response = await axios.get(`http://localhost:3000/users/${userId}`, {
-      headers: {Authorization: `Bearer ${accessToken}`}
-    });
-    setFormData({ username: response.data.username });
+      const response = await axiosInstance.get(`/users/${userId}`);
+      setFormData({ username: response.data.username });
       setUserInfo(response.data);
     } catch (err) {
       console.error(err);
@@ -57,12 +55,8 @@ const UserPage = () => {
   // Update user info
   const updateUserInfo = async () => {
     try {
-      await axios.put(`http://localhost:3000/users/${userId}`, formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          }
+      await axiosInstance.put(`/users/${userId}`, formData,
+        {headers: {'Content-Type': 'application/json'}
         }
       );
 
@@ -77,7 +71,7 @@ const UserPage = () => {
   // Fetch user posts
   const fetchUserPosts = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/posts`, {
+      const response = await axiosInstance.get(`/posts`, {
         params: { owner: userId },
         headers: { Authorization: `Bearer ${accessToken}` }
       });

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axiosInstance from '../api/axiosInstance'
 import axios from 'axios';
 
 const SignUp: React.FC = () => {
@@ -24,7 +25,7 @@ const SignUp: React.FC = () => {
     
     try {
       // POST request to backend
-      response = await axios.post('http://localhost:3000/auth/register', {
+      response = await axiosInstance.post('/auth/register', {
         username,
         email,
         password,

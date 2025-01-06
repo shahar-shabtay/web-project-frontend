@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './CommentsPage.css';
-import axios from 'axios';
+import '../styles/CommentsPage.css';
+import axiosInstance from '../api/axiosInstance'
+
 
 const CommentsPage: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -12,8 +13,8 @@ useEffect(() => {
     console.log("Fetching comments for postId:", postId); // Log the postId
 
     if (postId) {
-        axios
-            .get(`http://localhost:3000/comments/comment/${postId}`) // Updated route
+      axiosInstance
+            .get(`/comments/comment/${postId}`) // Updated route
             .then((response) => {
                 console.log("Fetched comments:", response.data); // Log the response to check if data is correct
                 setComments(response.data); // Assuming API returns an array of comments

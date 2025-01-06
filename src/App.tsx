@@ -3,8 +3,8 @@ import SignIn from './pages/signIn';
 import SignUp from './pages/signUp';
 import ChatPage from './pages/chatPage';
 import UserPage from './pages/userPage';
-import Home from './components/Home/home';
-import CommentsPage from './components/CommentsPage';
+import Home from './pages/home';
+import CommentsPage from './pages/CommentsPage';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 

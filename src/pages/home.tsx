@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import './home.css';
-import Header from '../header';
-import axios from 'axios';
-import CreatePostPage from '../../pages/CreatePostPage';
-import Posts from '../posts';
+import '../styles/home.css';
+import Header from '../components/header';
+import axiosInstance from '../api/axiosInstance'
+import CreatePostPage from './CreatePostPage';
+import Posts from '../components/posts';
 
 const Home: React.FC = () => {
   interface Post {
@@ -18,8 +18,8 @@ const Home: React.FC = () => {
 
   // Fetch posts when the component mounts
   useEffect(() => {
-    axios
-      .get('http://localhost:3000/posts')
+    axiosInstance
+      .get('/posts')
       .then((response) => {
         setPosts(response.data);
       })

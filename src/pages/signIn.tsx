@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import axios from 'axios';
+import axiosInstance from '../api/axiosInstance'
 import { GoogleOAuthProvider, GoogleLogin , CredentialResponse } from '@react-oauth/google';
 
 const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
@@ -16,7 +16,7 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
     e.preventDefault();
     const requestBody = { email, password };
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', requestBody,
+      const response = await axiosInstance.post('/auth/login', requestBody,
         { headers: {'Content-Type': 'application/json'},
           withCredentials: true }
       );
@@ -45,13 +45,13 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
   const handleGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
     let res;
 
-    res = await axios.post('http://localhost:3000/auth/google', {credential: credentialResponse.credential,});
+    res = await axiosInstance.post('/auth/google', {credential: credentialResponse.credential,});
 
     try {
       
       // If this is a new user, sign up first
       if (res.status === 201) {
-        res = await axios.post('http://localhost:3000/auth/google', {credential: credentialResponse.credential,});
+        res = await axiosInstance.post('/auth/google', {credential: credentialResponse.credential,});
       } 
   
       const data = res.data;

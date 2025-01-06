@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './Home/home.css';
-import axios from 'axios';
+import '../styles/home.css';
+import axiosInstance from '../api/axiosInstance'
 import { useNavigate } from 'react-router-dom';
 
 interface Post {
@@ -26,7 +26,7 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
     const fetchCommentCounts = async () => {
       for (const post of posts) {
         try {
-          const commentResponse = await axios.get(`http://localhost:3000/comments/comment/${post._id}`);
+          const commentResponse = await axiosInstance.get(`/comments/comment/${post._id}`);
           setUpdatedPosts((prevPosts) =>
             prevPosts.map((p) =>
               p._id === post._id
@@ -48,8 +48,8 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
     if (commentContent) {
       const commenter = 'shahar';
       console.log("Adding comment to postId:", postId); // Log the postId
-      axios
-        .post(`http://localhost:3000/comments`, {
+      axiosInstance
+        .post(`/comments`, {
           commenter,
           postID: postId,
           content: commentContent,

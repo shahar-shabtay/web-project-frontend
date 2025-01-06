@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
-import "./createPostPage.css";
+import "../styles/CreatePostPage.css";
 
 const CreatePostPage: React.FC = () => {
   const [title, setTitle] = useState("");
