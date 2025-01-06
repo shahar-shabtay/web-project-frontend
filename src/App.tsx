@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SignIn from './pages/signIn';
 import SignUp from './pages/signUp';
 import ChatPage from './pages/chatPage';
+import UserPage from './pages/userPage';
 import Home from './components/Home/home';
 import CommentsPage from './components/CommentsPage';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
@@ -34,7 +35,8 @@ const App: React.FC = () => {
             <Route path="/signin" element={<SignIn onSignIn={() => setIsAuthenticated(true)} />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/comments/:postId" element={<CommentsPage />} />
-            <Route path="/chat/" element={<ChatPage />} />
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/user" element={<UserPage />} />
           </Routes>
         </main>
       </div>

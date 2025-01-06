@@ -25,7 +25,7 @@ const Header: React.FC = () => {
         </div>
         <nav>
           <a href="/" className="nav-link">Home</a>
-          <a href="/about" className="nav-link">About</a>
+          <a href="/user" className="nav-link">My Space</a>
           <a href="/chat" className="nav-link">Our Chat</a>
           <a href="/signin" className="nav-link" onClick={handleSignOut}>SignOut</a>
         </nav>
