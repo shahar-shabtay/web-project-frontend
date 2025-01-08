@@ -48,6 +48,7 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
     fetchCommentCounts();
   }, [posts]);
 
+  // Add a comment to a post
   const handleComment = (postId: string) => {
     const commentContent = newComments[postId]?.trim();
     if (commentContent) {
@@ -78,6 +79,7 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
     }
   };
 
+  // Delete a post
   const handleDelete = async (postId: string) => {
     const confirmDelete = window.confirm('This post will be deleted. Are you sure?');
     if (!confirmDelete) return;
@@ -90,11 +92,13 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
     }
   };
 
+  // Edit a post
   const handleEditClick = (post: Post) => {
     setEditingPostId(post._id);
     setEditFormData({ title: post.title, content: post.content });
   };
 
+  // Save the edited post
   const handleSaveEdit = async (postId: string) => {
     try {
       await axiosInstance.put(`/posts/${postId}`, editFormData);
@@ -105,6 +109,7 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
     }
   };
 
+  // Check if the current user is the owner of the post
   const isUserPost = (post: Post) => {
     if (!accessToken) {
       throw new Error('Access token not found');
