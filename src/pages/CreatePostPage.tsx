@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
+import axiosInstance from '../api/axiosInstance';
 import "../styles/CreatePostPage.css";
 
 const CreatePostPage: React.FC = () => {
@@ -19,27 +20,30 @@ const CreatePostPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/posts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(postData),
-      });
-
-      if (response.ok){
-        const data = await response.json();
-        console.log('Post created:', data);
+      const response = await axiosInstance.post(
+        "/posts",
+        postData, // Pass the body directly as the second argument
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`, // Include the token in the headers
+          },
+        }
+      );
+      
+      if (response.status === 201) { 
+        const data = response.data;
+        console.log("Post created:", data);
+        
         // Refresh the page to reflect the new post
-        window.location.reload();  // This will reload the entire page
-      }
+        window.location.reload(); // This will reload the entire page
+      }      
 
       else {
         throw new Error(`Failed to create post: ${response.statusText}`);
       }
 
-      const result = await response.json();
+      const result = response.data;
       console.log("Post created successfully:", result);
 
       // Clear form fields after successful submission
