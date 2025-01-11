@@ -17,13 +17,13 @@ interface PostsProps {
   posts: Post[];
 }
 
-const Posts: React.FC<PostsProps> = ({ posts }) => {
+const Posts = ({ posts }: PostsProps) => {
   const [newComments, setNewComments] = useState<{ [key: string]: string }>({});
   const [updatedPosts, setUpdatedPosts] = useState<Post[]>(posts);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState({ title: '', content: '' });
   const navigate = useNavigate();
-  const accessToken = Cookies.get("accessToken");
+  const accessToken = Cookies.get("accessToken");  
 
   // Fetch comment counts for each post
   useEffect(() => {
@@ -52,7 +52,7 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
   const handleComment = (postId: string) => {
     const commentContent = newComments[postId]?.trim();
     if (commentContent) {
-      const commenter = 'shahar';
+      const commenter = 'shahar'; // TODO: fix
       axiosInstance
         .post(`/comments`, {
           commenter,
@@ -136,7 +136,7 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
                 value={editFormData.content}
                 onChange={(e) => setEditFormData({ ...editFormData, content: e.target.value })}
                 className="form-control mb-2"
-              ></textarea>
+              />
               <button className="btn btn-success me-2" onClick={() => handleSaveEdit(post._id)}>Save</button>
               <button className="btn btn-secondary" onClick={() => setEditingPostId(null)}>Cancel</button>
             </div>

@@ -5,15 +5,15 @@ import axiosInstance from '../api/axiosInstance'
 import CreatePostPage from './CreatePostPage';
 import Posts from '../components/posts';
 
-const Home: React.FC = () => {
-  interface Post {
-    _id: string;
-    title: string;
-    content: string;
-    comments?: { commenter: string; content: string }[];
-    commentCount?: number;
-  }
+interface Post {
+  _id: string;
+  title: string;
+  content: string;
+  comments?: { commenter: string; content: string }[];
+  commentCount?: number;
+}
 
+const Home: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
 
   // Fetch posts when the component mounts
