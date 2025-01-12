@@ -9,8 +9,9 @@ interface Post {
   _id: string;
   title: string;
   content: string;
-  comments?: { commenter: string; content: string }[];
+  owner: string;
   commentCount?: number;
+  comments?: { commenter: string; content: string }[];
 }
 
 const Home: React.FC = () => {
