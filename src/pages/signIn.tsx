@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import axios from 'axios';
+import axiosInstance from '../api/axiosInstance'
 import { GoogleOAuthProvider, GoogleLogin , CredentialResponse } from '@react-oauth/google';
 
 const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
@@ -10,13 +10,19 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+
+  if (!GOOGLE_CLIENT_ID) {
+    // throw new Error('Missing Google Client ID');
+    console.log('Missing Google Client ID');
+  }
 
   // Handle a submit of sign in button
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const requestBody = { email, password };
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', requestBody,
+      const response = await axiosInstance.post('/auth/login', requestBody,
         { headers: {'Content-Type': 'application/json'},
           withCredentials: true }
       );
@@ -45,13 +51,13 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
   const handleGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
     let res;
 
-    res = await axios.post('http://localhost:3000/auth/google', {credential: credentialResponse.credential,});
+    res = await axiosInstance.post('/auth/google', {credential: credentialResponse.credential,});
 
     try {
       
       // If this is a new user, sign up first
       if (res.status === 201) {
-        res = await axios.post('http://localhost:3000/auth/google', {credential: credentialResponse.credential,});
+        res = await axiosInstance.post('/auth/google', {credential: credentialResponse.credential,});
       } 
   
       const data = res.data;
@@ -71,7 +77,7 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
   };
 
   return (
-    <GoogleOAuthProvider clientId="820021502901-rc6goqvsie6bhuh2f530gralprmjk7ll.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}> 
       <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
         <div className="card shadow p-4" style={{ width: '100%', maxWidth: '400px' }}>
           <h2 className="text-center mb-4">Sign In</h2>
@@ -104,8 +110,8 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
             </div>
             <button type="submit" className="btn btn-primary w-100 mb-3">Sign In</button>
           </form>
-          <div className="text-center mb-3">
-            <GoogleLogin onSuccess={handleGoogleLoginSuccess} />
+          <div className="d-flex justify-content-center">
+            <GoogleLogin onSuccess={handleGoogleLoginSuccess} width={352}   />
           </div>
           <div className="mt-3 text-center">
             <a href="/forgot-password" className="text-decoration-none">Forgot Password?</a>

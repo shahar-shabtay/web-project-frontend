@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../api/axiosInstance'
 import Header from '../components/header';
 import Footer from '../components/footer';
 
@@ -15,7 +16,7 @@ const ChatPage = () => {
     setResponse('');
 
     try {
-      const result = await axios.post('http://localhost:3000/chat', {question} , 
+      const result = await axiosInstance.post('/chat', {question} , 
         { headers: {'Content-Type': 'application/json'}, withCredentials: true });
 
       setResponse(result.data.answer);

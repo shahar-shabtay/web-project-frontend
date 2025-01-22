@@ -23,11 +23,11 @@ const Header: React.FC = () => {
           <img src="/small_logo.png" alt="Logo" className="logo" />
           <h1 className="headline">DoggoDopt</h1>
         </div>
-        <nav>
-          <a href="/" className="nav-link">Home</a>
-          <a href="/about" className="nav-link">About</a>
-          <a href="/chat" className="nav-link">Our Chat</a>
-          <a href="/signin" className="nav-link" onClick={handleSignOut}>SignOut</a>
+        <nav className="d-flex align-items-center"> {/* Added Flexbox for horizontal alignment */}
+          <a href="/" className="nav-link mx-2">Home</a>
+          <a href="/user" className="nav-link mx-2">My Space</a>
+          <a href="/chat" className="nav-link mx-2">Our Chat</a>
+          <a href="/signin" className="nav-link mx-2" onClick={handleSignOut}>SignOut</a>
         </nav>
       </div>
     </header>
