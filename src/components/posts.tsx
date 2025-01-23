@@ -68,8 +68,7 @@ const Posts = ({ posts }: PostsProps) => {
   const handleComment = (postId: string) => {
     const commentContent = newComments[postId]?.trim();
     if (commentContent) {
-      // const commenter = 'shahar'; // TODO: fix
-      const commenter = userName; // TODO: fix
+      const commenter = userName;
       axiosInstance
         .post(`/comments`, {
           commenter,
