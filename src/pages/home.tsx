@@ -9,6 +9,7 @@ interface Post {
   _id: string;
   title: string;
   content: string;
+  owner: string;
   comments?: { commenter: string; content: string }[];
   commentCount?: number;
 }
