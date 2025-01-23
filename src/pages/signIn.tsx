@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axiosInstance from '../api/axiosInstance'
+// import { AxiosError } from 'axios'
+import axios from 'axios';
 import { GoogleOAuthProvider, GoogleLogin , CredentialResponse } from '@react-oauth/google';
 
 const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
@@ -17,33 +19,37 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
     console.log('Missing Google Client ID');
   }
 
-  // Handle a submit of sign in button
+  // Handle a submit of sign in
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const requestBody = { email, password };
-    try {
-      const response = await axiosInstance.post('/auth/login', requestBody,
-        { headers: {'Content-Type': 'application/json'},
-          withCredentials: true }
-      );
-  
-      if (response.status === 200) {
-        const data = response.data;
-        Cookies.set('accessToken', data.accessToken, { path: '/', secure: true, sameSite: 'Strict' });
-        Cookies.set('refreshToken', data.refreshToken, { path: '/', secure: true, sameSite: 'Strict' });
 
-        onSignIn();
-        setSuccess('Login successful! Redirecting...');
-        setError('');
-        setTimeout(() => navigate('/'), 2000);
-      } else {
-        setSuccess('');
-        setError('Email or password is not correct.');
-      }
+    try {
+        const response = await axiosInstance.post('/auth/login', requestBody, {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
+        });
+
+        if (response.status === 200) {
+            const data = response.data;
+            Cookies.set('accessToken', data.accessToken, { path: '/', secure: true, sameSite: 'Strict' });
+            Cookies.set('refreshToken', data.refreshToken, { path: '/', secure: true, sameSite: 'Strict' });
+
+            onSignIn();
+            setSuccess('Login successful! Redirecting...');
+            setError('');
+            setTimeout(() => navigate('/'), 1000);
+        } else {
+            setSuccess('');
+            setError('Email or password is not correct.');
+        }
     } catch (error) {
-      console.error('Login error:', error);
-      setSuccess('');
-      setError('An error occurred. Please try again later.');
+        if (axios.isAxiosError(error) && error.response) {
+            const serverError = error.response.data?.error;
+            setError(serverError || 'An error occurred. Please try again later.');
+        } else {
+            setError('An error occurred. Please try again later.');
+        }
     }
   };
 
@@ -69,7 +75,7 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
       setError('');
       setTimeout(() => navigate('/'), 2000);
     } catch (error) {
-      console.error('Login error:', error);
+      console.log('Login error:', error);
       setSuccess('');
       setError('An error occurred. Please try again later.');
     }
@@ -114,7 +120,6 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
             <GoogleLogin onSuccess={handleGoogleLoginSuccess} width={352}   />
           </div>
           <div className="mt-3 text-center">
-            <a href="/forgot-password" className="text-decoration-none">Forgot Password?</a>
             <p className="mt-2">
               Don't have an account? <a href="/signup" className="text-decoration-none">Sign Up</a>
             </p>
