@@ -12,8 +12,6 @@ const CommentsPage: React.FC = () => {
   const navigate = useNavigate();
   const [comments, setComments] = useState<any[]>([]);
   const decodedPostTitle = decodeURIComponent(postTitle || ''); // Decode the title from the URL params
-  const location = useLocation();
-  const post = location.state?.post; // Check if the state contains 'post'
 
 useEffect(() => {
     console.log("Fetching comments for postId:", postId); // Log the postId
