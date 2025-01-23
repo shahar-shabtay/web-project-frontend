@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import "../styles/CreatePostPage.css";
+import axiosInstance from '../api/axiosInstance';
 
 const CreatePostPage: React.FC = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [owner] = useState("64fe4c2ae7891b6cf7890def");
+  const [owner] = useState("");
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -19,33 +20,29 @@ const CreatePostPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/posts", {
-        method: "POST",
+      const response = await axiosInstance.post('/posts', postData, {
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(postData),
       });
-
-      if (response.ok){
-        const data = await response.json();
-        console.log('Post created:', data);
+      console.log("response:", response); 
+      if (response.status === 201) {
+        console.log('Post created:', response.data);
         // Refresh the page to reflect the new post
         window.location.reload();  // This will reload the entire page
       }
 
       else {
-        throw new Error(`Failed to create post: ${response.statusText}`);
+        throw new Error(`Failed to create post: ${response}`);
       }
 
-      const result = await response.json();
-      console.log("Post created successfully:", result);
+      console.log("Post created successfully:", response);
 
       // Clear form fields after successful submission
       setTitle("");
       setContent("");
     } catch (error) {
+      console.log("Error creating post:", error);
       console.error("Error creating post:", error);
     }
   };
