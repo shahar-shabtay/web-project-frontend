@@ -13,14 +13,11 @@ const CommentsPage: React.FC = () => {
   const [comments, setComments] = useState<any[]>([]);
   const decodedPostTitle = decodeURIComponent(postTitle || ''); // Decode the title from the URL params
 
-useEffect(() => {
-    console.log("Fetching comments for postId:", postId); // Log the postId
-
+useEffect(() => {  
     if (postId) {
       axiosInstance
             .get(`/comments/comment/${postId}`) // Updated route
             .then((response) => {
-                console.log("Fetched comments:", response.data); // Log the response to check if data is correct
                 setComments(response.data); 
             })
             .catch((error) => {
