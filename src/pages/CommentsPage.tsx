@@ -30,8 +30,9 @@ useEffect(() => {
 }, [postId]);
 
   return (
-    <div className="comments-page">
+    <div>
       <Header />
+    <div className="comments-page">
       <button onClick={() => navigate('/')} className="btn btn-secondary">
         Back
       </button>
@@ -48,7 +49,8 @@ useEffect(() => {
           ))
         )}
       </ul>
-      <Footer />
+    </div>
+    <Footer />
     </div>
   );
 };
