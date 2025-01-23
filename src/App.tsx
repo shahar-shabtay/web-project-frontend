@@ -35,6 +35,7 @@ const App: React.FC = () => {
             <Route path="/signin" element={<SignIn onSignIn={() => setIsAuthenticated(true)} />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/comments/:postId" element={<CommentsPage />} />
+            <Route path="/comments/:postId/:postTitle" element={<CommentsPage />} />
             <Route path="/chat" element={<ChatPage />} />
             <Route path="/user" element={<UserPage />} />
           </Routes>

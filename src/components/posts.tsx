@@ -165,7 +165,15 @@ const Posts = ({ posts }: PostsProps) => {
             </div>
             <div className="comments-overview">
               <span>{post.commentCount || 0} comments</span>
-              <button className="btn btn-link" onClick={() => navigate(`/comments/${post._id}`)}>View Comments</button>
+              <button 
+                className="btn btn-link" 
+                onClick={() => {
+                  console.log('Navigating to comments with title:', post.title);
+                  navigate(`/comments/${post._id}/${encodeURIComponent(post.title)}`);
+                }}
+              >
+                View Comments
+              </button>
             </div>
           </div>
         </div>
