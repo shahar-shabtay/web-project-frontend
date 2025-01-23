@@ -17,6 +17,23 @@ interface PostsProps {
   posts: Post[];
 }
 
+const accessToken = Cookies.get("accessToken");
+    
+if (!accessToken) {
+  throw new Error('Access token not found');
+}
+
+// Decode the JWT token to extract user ID
+const payload = JSON.parse(atob(accessToken.split('.')[1]));
+const userId = payload._id;
+
+if (!userId) {
+  throw new Error('User ID not found in token');
+}
+
+const response = await axiosInstance.get(`/users/${userId}`);
+const userName = response.data.username;
+
 const Posts = ({ posts }: PostsProps) => {
   const [newComments, setNewComments] = useState<{ [key: string]: string }>({});
   const [updatedPosts, setUpdatedPosts] = useState<Post[]>(posts);
@@ -52,7 +69,7 @@ const Posts = ({ posts }: PostsProps) => {
   const handleComment = (postId: string) => {
     const commentContent = newComments[postId]?.trim();
     if (commentContent) {
-      const commenter = 'shahar'; // TODO: fix
+      const commenter = {userName}; // TODO: fix
       axiosInstance
         .post(`/comments`, {
           commenter,
