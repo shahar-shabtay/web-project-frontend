@@ -38,6 +38,7 @@ const Posts = ({ posts }: PostsProps) => {
   const [updatedPosts, setUpdatedPosts] = useState<Post[]>(posts);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState({ title: '', content: '' });
+  const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
   const navigate = useNavigate();
   const accessToken = Cookies.get("accessToken");  
 
@@ -62,6 +63,26 @@ const Posts = ({ posts }: PostsProps) => {
     };
 
     fetchCommentCounts();
+  }, [posts]);
+
+  useEffect(() => {
+    setUpdatedPosts(posts);
+
+    // Fetch initial liked status for posts
+    const fetchLikes = async () => {
+      try {
+        const response = await axiosInstance.get('/likes');
+        const likesData = response.data.reduce((acc: any, like: any) => {
+          acc[like.postId] = true; // Assuming the response has postId for each like
+          return acc;
+        }, {});
+        setLikedPosts(likesData);
+      } catch (error) {
+        console.error('Error fetching likes:', error);
+      }
+    };
+
+    fetchLikes();
   }, [posts]);
 
   // Add a comment to a post
@@ -92,6 +113,24 @@ const Posts = ({ posts }: PostsProps) => {
         .catch((error) => {
           console.error('There was an error adding the comment:', error);
         });
+    }
+  };
+
+  const handleLike = async (postId: string) => {
+    try {
+      await axiosInstance.post('/likes', { postId });
+      setLikedPosts({ ...likedPosts, [postId]: true });
+    } catch (error) {
+      console.error('Error liking the post:', error);
+    }
+  };
+
+  const handleUnlike = async (postId: string) => {
+    try {
+      await axiosInstance.delete(`/likes/${postId}`);
+      setLikedPosts({ ...likedPosts, [postId]: false });
+    } catch (error) {
+      console.error('Error unliking the post:', error);
     }
   };
 
@@ -169,6 +208,27 @@ const Posts = ({ posts }: PostsProps) => {
             </>
           )}
           <div className="post-actions">
+          <div className="like-section">
+              <button
+                className="like-button btn"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  cursor: 'pointer',
+                }}
+                onClick={() =>
+                  likedPosts[post._id] ? handleUnlike(post._id) : handleLike(post._id)
+                }
+              >
+                <img
+                  src={likedPosts[post._id] ? '/after_like.png' : '/before_like.png'}
+                  alt={likedPosts[post._id] ? 'Liked' : 'Like'}
+                  style={{ width: '24px', height: '24px' }}
+                />
+              </button>
+              <span>{likedPosts[post._id] ? 1 : 0} Likes</span>
+            </div>
             <div className="comment-section">
               <input
                 type="text"
