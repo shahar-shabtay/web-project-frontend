@@ -115,22 +115,21 @@ const Posts = ({ posts }: PostsProps) => {
         });
     }
   };
-
   const handleLike = async (postId: string) => {
     try {
-      await axiosInstance.post('/likes', { postId });
-      setLikedPosts({ ...likedPosts, [postId]: true });
+        await axiosInstance.put(`/posts/${postId}/like`);
+        setLikedPosts((prev) => ({ ...prev, [postId]: true }));
     } catch (error) {
-      console.error('Error liking the post:', error);
+        console.error('Error liking post:', error);
     }
   };
 
-  const handleUnlike = async (postId: string) => {
+const handleUnlike = async (postId: string) => {
     try {
-      await axiosInstance.delete(`/likes/${postId}`);
-      setLikedPosts({ ...likedPosts, [postId]: false });
+        await axiosInstance.put(`/posts/${postId}/unlike`);
+        setLikedPosts((prev) => ({ ...prev, [postId]: false }));
     } catch (error) {
-      console.error('Error unliking the post:', error);
+        console.error('Error unliking post:', error);
     }
   };
 
@@ -221,6 +220,7 @@ const Posts = ({ posts }: PostsProps) => {
                   likedPosts[post._id] ? handleUnlike(post._id) : handleLike(post._id)
                 }
               >
+                {likedPosts[post._id] ? 'Unlike' : 'Like'}
                 <img
                   src={likedPosts[post._id] ? '/after_like.png' : '/before_like.png'}
                   alt={likedPosts[post._id] ? 'Liked' : 'Like'}
