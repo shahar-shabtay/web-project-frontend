@@ -1,6 +1,7 @@
 import React from 'react';
 import '../index.css'
 import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
@@ -20,7 +21,9 @@ const Header: React.FC = () => {
     <header className="header">
       <div className="container-fluid d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center">
-          <img src="/small_logo.png" alt="Logo" className="logo" />
+          <Link to="/">
+            <img src="/small_logo.png" alt="Logo" className="logo" />
+          </Link>
           <h1 className="headline">DoggoDopt</h1>
         </div>
         <nav className="d-flex align-items-center"> {/* Added Flexbox for horizontal alignment */}
