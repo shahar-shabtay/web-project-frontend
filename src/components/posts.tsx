@@ -11,6 +11,7 @@ interface Post {
   owner: string;
   commentCount?: number;
   comments?: { commenter: string; content: string }[];
+  likeCount?: number;
 }
 
 interface PostsProps {
@@ -67,24 +68,45 @@ const Posts = ({ posts }: PostsProps) => {
 
   useEffect(() => {
     setUpdatedPosts(posts);
-
-    // Fetch initial liked status for posts
+  
     const fetchLikes = async () => {
       try {
-        const response = await axiosInstance.get('/likes');
+        const response = await axiosInstance.get('/likes'); // Fetch all likes
         const likesData = response.data.reduce((acc: any, like: any) => {
-          acc[like.postId] = true; // Assuming the response has postId for each like
+          if (!acc[like.postId]) {
+            acc[like.postId] = { total: 0, likedByUser: false };
+          }
+          acc[like.postId].total += 1; // Count the like
+          if (like.userName === userName) {
+            acc[like.postId].likedByUser = true; // Mark as liked by user
+          }
           return acc;
         }, {});
-        setLikedPosts(likesData);
+  
+        setLikedPosts(
+          Object.keys(likesData).reduce(
+            (acc, postId) => ({
+              ...acc,
+              [postId]: likesData[postId].likedByUser,
+            }),
+            {}
+          )
+        );
+  
+        setUpdatedPosts((prevPosts) =>
+          prevPosts.map((post) => ({
+            ...post,
+            likeCount: likesData[post._id]?.total || 0, // Update like count
+          }))
+        );
       } catch (error) {
         console.error('Error fetching likes:', error);
       }
     };
-
+  
     fetchLikes();
   }, [posts]);
-
+    
   // Add a comment to a post
   const handleComment = (postId: string) => {
     const commentContent = newComments[postId]?.trim();
@@ -126,6 +148,8 @@ const Posts = ({ posts }: PostsProps) => {
   };
 
   const handleUnlike = async (postId: string) => {
+    console.log('Unlike post ID:', postId);
+    console.log('Current userName:', userName); // Add this
     try {
         await axiosInstance.put(`/posts/${postId}/unlike`, { userName });
         setLikedPosts((prev) => ({ ...prev, [postId]: false }));
@@ -133,7 +157,6 @@ const Posts = ({ posts }: PostsProps) => {
         console.error('Error unliking post:', error);
     }
   };
-
   // Delete a post
   const handleDelete = async (postId: string) => {
     const confirmDelete = window.confirm('This post will be deleted. Are you sure?');
@@ -209,27 +232,27 @@ const Posts = ({ posts }: PostsProps) => {
           )}
           <div className="post-actions">
           <div className="like-section">
-              <button
-                className="like-button btn"
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  padding: 0,
-                  cursor: 'pointer',
-                }}
-                onClick={() =>
-                  likedPosts[post._id] ? handleUnlike(post._id) : handleLike(post._id)
-                }
-              >
-                {likedPosts[post._id] ? 'Unlike' : 'Like'}
-                <img
-                  src={likedPosts[post._id] ? '/after_like.png' : '/before_like.png'}
-                  alt={likedPosts[post._id] ? 'Liked' : 'Like'}
-                  style={{ width: '24px', height: '24px' }}
-                />
-              </button>
-              <span>{likedPosts[post._id] ? 1 : 0} Likes</span>
-            </div>
+            <button
+              className="like-button btn"
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                cursor: 'pointer',
+              }}
+              onClick={() =>
+                likedPosts[post._id] ? handleUnlike(post._id) : handleLike(post._id)
+              }
+            >
+              {likedPosts[post._id] ? 'Unlike' : 'Like'}
+              <img
+                src={likedPosts[post._id] ? '/after_like.png' : '/before_like.png'}
+                alt={likedPosts[post._id] ? 'Liked' : 'Like'}
+                style={{ width: '24px', height: '24px' }}
+              />
+            </button>
+            <span>{post.likeCount || 0} Likes</span>
+          </div>
             <div className="comment-section">
               <input
                 type="text"
