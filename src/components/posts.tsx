@@ -115,18 +115,19 @@ const Posts = ({ posts }: PostsProps) => {
         });
     }
   };
+
   const handleLike = async (postId: string) => {
     try {
-        await axiosInstance.put(`/posts/${postId}/like`);
+        await axiosInstance.put(`/posts/${postId}/like`, { userName });
         setLikedPosts((prev) => ({ ...prev, [postId]: true }));
     } catch (error) {
         console.error('Error liking post:', error);
     }
   };
 
-const handleUnlike = async (postId: string) => {
+  const handleUnlike = async (postId: string) => {
     try {
-        await axiosInstance.put(`/posts/${postId}/unlike`);
+        await axiosInstance.put(`/posts/${postId}/unlike`, { userName });
         setLikedPosts((prev) => ({ ...prev, [postId]: false }));
     } catch (error) {
         console.error('Error unliking post:', error);
