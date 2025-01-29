@@ -68,42 +68,27 @@ const Posts = ({ posts }: PostsProps) => {
 
   useEffect(() => {
     setUpdatedPosts(posts);
-  
     const fetchLikes = async () => {
       try {
-        const response = await axiosInstance.get('/likes'); // Fetch all likes
-        const likesData = response.data.reduce((acc: any, like: any) => {
-          if (!acc[like.postId]) {
-            acc[like.postId] = { total: 0, likedByUser: false };
-          }
-          acc[like.postId].total += 1; // Count the like
-          if (like.userName === userName) {
-            acc[like.postId].likedByUser = true; // Mark as liked by user
-          }
-          return acc;
-        }, {});
-  
-        setLikedPosts(
-          Object.keys(likesData).reduce(
-            (acc, postId) => ({
-              ...acc,
-              [postId]: likesData[postId].likedByUser,
-            }),
-            {}
-          )
-        );
-  
+        const likesMap: Record<string, number> = {}; // To store post ID and like counts
+    
+        for (const post of posts) {
+          console.log('Fetching likes for post:', post._id);
+          const response = await axiosInstance.get(`/posts/${post._id}/likes`); // Correct API call
+          likesMap[post._id] = response.data.likes; // Store like count
+        }
+    
         setUpdatedPosts((prevPosts) =>
           prevPosts.map((post) => ({
             ...post,
-            likeCount: likesData[post._id]?.total || 0, // Update like count
+            likeCount: likesMap[post._id] || 0, // Ensure every post has a like count
           }))
         );
       } catch (error) {
         console.error('Error fetching likes:', error);
       }
     };
-  
+          
     fetchLikes();
   }, [posts]);
     
@@ -140,18 +125,32 @@ const Posts = ({ posts }: PostsProps) => {
 
   const handleLike = async (postId: string) => {
     try {
-        await axiosInstance.put(`/posts/${postId}/like`, { userName });
-        setLikedPosts((prev) => ({ ...prev, [postId]: true }));
+      await axiosInstance.put(`/posts/${postId}/like`, { userName });
+  
+      setUpdatedPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId ? { ...post, likeCount: (post.likeCount || 0) + 1 } : post
+        )
+      );
+  
+      setLikedPosts((prev) => ({ ...prev, [postId]: true }));
     } catch (error) {
-        console.error('Error liking post:', error);
+      console.error('Error liking post:', error);
     }
   };
-
+  
   const handleUnlike = async (postId: string) => {
     console.log('Unlike post ID:', postId);
     console.log('Current userName:', userName); // Add this
     try {
         await axiosInstance.put(`/posts/${postId}/unlike`, { userName });
+
+        setUpdatedPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post._id === postId ? { ...post, likeCount: (post.likeCount || 0) - 1 } : post
+          )
+        );
+
         setLikedPosts((prev) => ({ ...prev, [postId]: false }));
     } catch (error) {
         console.error('Error unliking post:', error);
