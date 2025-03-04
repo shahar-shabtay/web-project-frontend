@@ -3,6 +3,7 @@ import '../styles/home.css';
 import axiosInstance from '../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import like from './like';
 
 interface Post {
   _id: string;
@@ -11,7 +12,9 @@ interface Post {
   owner: string;
   commentCount?: number;
   comments?: { commenter: string; content: string }[];
-}
+  likesCount: number;
+};
+
 
 interface PostsProps {
   posts: Post[];
@@ -38,6 +41,8 @@ const Posts = ({ posts }: PostsProps) => {
   const [updatedPosts, setUpdatedPosts] = useState<Post[]>(posts);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState({ title: '', content: '' });
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [likesActiveCount, setlikesActiveCount] = useState<number>(likesCount || 0);
   const navigate = useNavigate();
   const accessToken = Cookies.get("accessToken");  
 
@@ -125,6 +130,23 @@ const Posts = ({ posts }: PostsProps) => {
     }
   };
 
+  const handleLike = async (postId: string) => {
+    try {
+      if (isLiked) {
+        await like.DeleteLike(postId);
+        setIsLiked(false);
+        setlikesActiveCount((prevCount) => Math.max(0, prevCount - 1));
+      } else {
+        await like.CreateLike(postId);
+        setIsLiked(true);
+        setlikesActiveCount((prevCount) => prevCount + 1);
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+    }
+  };
+
+
   // Check if the current user is the owner of the post
   const isUserPost = (post: Post) => {
     if (!accessToken) {
@@ -169,6 +191,26 @@ const Posts = ({ posts }: PostsProps) => {
             </>
           )}
           <div className="post-actions">
+            <div className="like-section">
+              <button
+                className="like-button btn"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  cursor: 'pointer',
+                }}
+                onClick={() => handleLike(post._id)}
+              >
+                {isLiked ? 'Unlike' : 'Like'}
+                <img
+                  src={isLiked ? '/after_like.png' : '/before_like.png'}
+                  alt={isLiked ? 'Liked' : 'Like'}
+                  style={{ width: '24px', height: '24px' }}
+                />
+              </button>
+              <span>{likesActiveCount} Likes</span>
+            </div>
             <div className="comment-section">
               <input
                 type="text"
