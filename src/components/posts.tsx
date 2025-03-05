@@ -41,8 +41,10 @@ const Posts = ({ posts }: PostsProps) => {
   const [updatedPosts, setUpdatedPosts] = useState<Post[]>(posts);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState({ title: '', content: '' });
-  const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [likesActiveCount, setlikesActiveCount] = useState<number>(likesCount || 0);
+  // const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
+
+  // const [likesActiveCount, setlikesActiveCount] = useState<number>(likesCount || 0);
   const navigate = useNavigate();
   const accessToken = Cookies.get("accessToken");  
 
@@ -69,7 +71,32 @@ const Posts = ({ posts }: PostsProps) => {
     fetchCommentCounts();
   }, [posts]);
 
-  // Add a comment to a post
+    // Fetch likes counts for each post
+    useEffect(() => {
+      setUpdatedPosts(posts);
+      const fetchLikesCounts = async () => {
+        for (const post of posts) {
+          try {
+            const likesResponse = await axiosInstance.get(`/likes/like/${post._id}`);
+            const likesCount = likesResponse.data.likesCount;
+            
+            setUpdatedPosts((prevPosts) =>
+              prevPosts.map((p) =>
+                p._id === post._id
+                  ? { ...p, likesCount: likesCount } // Update only likesCount
+                  : p
+              )
+            );
+          } catch (error) {
+            console.error(`Error fetching likes for post ${post._id}:`, error);
+          }
+        }
+      };
+  
+      fetchLikesCounts();
+    }, [posts]);
+
+    // Add a comment to a post
   const handleComment = (postId: string) => {
     const commentContent = newComments[postId]?.trim();
     if (commentContent) {
@@ -132,14 +159,26 @@ const Posts = ({ posts }: PostsProps) => {
 
   const handleLike = async (postId: string) => {
     try {
-      if (isLiked) {
+      if (likedPosts[postId]) {
         await like.DeleteLike(postId);
-        setIsLiked(false);
-        setlikesActiveCount((prevCount) => Math.max(0, prevCount - 1));
+        setLikedPosts({ ...likedPosts, [postId]: false });
+        setUpdatedPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post._id === postId
+              ? { ...post, likesCount: Math.max(0, post.likesCount - 1) }
+              : post
+          )
+        );
       } else {
         await like.CreateLike(postId);
-        setIsLiked(true);
-        setlikesActiveCount((prevCount) => prevCount + 1);
+        setLikedPosts({ ...likedPosts, [postId]: true });
+        setUpdatedPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post._id === postId
+              ? { ...post, likesCount: post.likesCount + 1 }
+              : post
+          )
+        );
       }
     } catch (error) {
       console.error("Error toggling like:", error);
@@ -192,25 +231,25 @@ const Posts = ({ posts }: PostsProps) => {
           )}
           <div className="post-actions">
             <div className="like-section">
-              <button
-                className="like-button btn"
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  padding: 0,
-                  cursor: 'pointer',
-                }}
-                onClick={() => handleLike(post._id)}
-              >
-                {isLiked ? 'Unlike' : 'Like'}
-                <img
-                  src={isLiked ? '/after_like.png' : '/before_like.png'}
-                  alt={isLiked ? 'Liked' : 'Like'}
-                  style={{ width: '24px', height: '24px' }}
-                />
-              </button>
-              <span>{likesActiveCount} Likes</span>
-            </div>
+                <button
+                  className="like-button btn"
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => handleLike(post._id)}
+                >
+                  {likedPosts[post._id] ? 'Unlike' : 'Like'}
+                  <img
+                    src={likedPosts[post._id] ? '/after_like.png' : '/before_like.png'}
+                    alt={likedPosts[post._id] ? 'Liked' : 'Like'}
+                    style={{ width: '24px', height: '24px' }}
+                  />
+                </button>
+                <span>{post.likesCount} Likes</span>
+              </div>
             <div className="comment-section">
               <input
                 type="text"
