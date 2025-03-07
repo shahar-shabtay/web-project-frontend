@@ -95,6 +95,8 @@ const Posts = ({ posts }: PostsProps) => {
           try {
             const { request: likedRequest } = like.getLikeByOwner(post._id, userId);
             const likedResponse = await likedRequest;
+            console.log("likesCount:", likedResponse.data.likesCount)
+
 
             // Update the like status for the post
             setUpdatedPosts((prevPosts) =>
@@ -102,14 +104,18 @@ const Posts = ({ posts }: PostsProps) => {
                 p._id === post._id
                   ? {
                       ...p,
-                      likesCount: likedResponse.data.likesCount, // Assuming you want to update the likes count too
+                      likesCount: likedResponse.data.likesCount, 
+                      
                     }
                   : p
               )
             );
+            console.log("likesCount:", likedResponse.data.likesCount)
+            console.log("likesCount:", likesActiveCount)
 
             // Set isLiked state this post
             setIsLiked(() => {
+              console.log("isLiked:", likedResponse.data.liked);
               return likedResponse.data.liked;
             });
   
@@ -200,27 +206,53 @@ const Posts = ({ posts }: PostsProps) => {
     }
 
     try {
-      if (likedPosts[postId]) {
+      if(isLiked){
         await like.DeleteLike(postId);
+        setIsLiked(false);
         setLikedPosts((prev) => ({ ...prev, [postId]: false }));
+        // setlikesActiveCount((prevCount) => Math.max(0, prevCount - 1));
         setUpdatedPosts((prevPosts) =>
           prevPosts.map((post) =>
             post._id === postId
-              ? { ...post, likesCount: Math.max(0, post.likesCount - 1) }
-              : post
-          )
-        );
-      } else {
-        await like.CreateLike(postId);
-        setLikedPosts((prev) => ({ ...prev, [postId]: true }));
-        setUpdatedPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post._id === postId
-              ? { ...post, likesCount: post.likesCount + 1 }
+              ? { ...post, likesCount: Math.max(0, (post.likesCount || 0) - 1) }
               : post
           )
         );
       }
+      else {
+        await like.CreateLike(postId);
+        setIsLiked(true);
+        setLikedPosts((prev) => ({ ...prev, [postId]: true }));
+        // setlikesActiveCount((prevCount) => Math.max(0, prevCount + 1));
+        setUpdatedPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post._id === postId
+              ? { ...post, likesCount: Math.max(0, (post.likesCount || 0) + 1) }
+              : post
+          )
+        );
+      }
+      // if (likedPosts[postId]) {
+      //   await like.DeleteLike(postId);
+      //   setLikedPosts((prev) => ({ ...prev, [postId]: false }));
+      //   setUpdatedPosts((prevPosts) =>
+      //     prevPosts.map((post) =>
+      //       post._id === postId
+      //         ? { ...post, likesCount: Math.max(0, post.likesCount - 1) }
+      //         : post
+      //     )
+      //   );
+      // } else {
+      //   await like.CreateLike(postId);
+      //   setLikedPosts((prev) => ({ ...prev, [postId]: true }));
+      //   setUpdatedPosts((prevPosts) =>
+      //     prevPosts.map((post) =>
+      //       post._id === postId
+      //         ? { ...post, likesCount: post.likesCount + 1 }
+      //         : post
+      //     )
+      //   );
+      // }
     } catch (error) {
       console.error("Error toggling like:", error);
     }
@@ -333,6 +365,7 @@ const Posts = ({ posts }: PostsProps) => {
                     style={{ width: '24px', height: '24px' }}
                   />
                 </button>
+                {/* <span>{likesActiveCount} Likes</span> */}
                 <span>{post.likesCount || 0 } Likes</span>
               </div>
             <div className="comment-section">
