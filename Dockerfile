@@ -15,6 +15,8 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy Nginx configuration file
+COPY nginx/client-cert.pem /etc/nginx/client-cert.pem
+COPY nginx/client-key.pem /etc/nginx/client-key.pem
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Copy the build files to the Nginx HTML directory

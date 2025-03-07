@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 const axiosInstance = axios.create({
   // baseURL: 'https://localhost:3000/api',
-  baseURL: 'https://10.10.246.71/api',
+  baseURL: 'https://193.106.55.231/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -31,12 +31,12 @@ axiosInstance.interceptors.response.use(
 
       try {
         // Call the refresh token endpoint
-        const refreshResponse = await axios.post('https://10.10.246.71/api/refresh-token', {
+        const refreshResponse = await axios.post('https://193.106.55.231/api/refresh-token', {
           token: Cookies.get('refreshToken'),
         });
 
         const newAccessToken = refreshResponse.data.accessToken;
-        Cookies.set('accessToken', newAccessToken, { sameSite: 'Strict' });
+        Cookies.set('accessToken', newAccessToken, { secure: true, sameSite: 'Strict' });
 
         // Retry the original request with the new token
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
