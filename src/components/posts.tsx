@@ -37,15 +37,13 @@ if (!accessToken) {
 }
 
 const Posts = ({ posts }: PostsProps) => {
-  const likesCount: number = 0;
   const [newComments, setNewComments] = useState<{ [key: string]: string }>({});
   const [updatedPosts, setUpdatedPosts] = useState<Post[]>(posts);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState({ title: '', content: '' });
-  const [isLiked, setIsLiked] = useState(false);
-  const [likesActiveCount, setlikesActiveCount] = useState<number>(likesCount || 0);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   // const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
+  const [likedPosts, setLikedPosts] = useState<string[]>([]); // Define state for liked posts
 
   // const [likesActiveCount, setlikesActiveCount] = useState<number>(likesCount || 0);
   const navigate = useNavigate();
@@ -91,37 +89,32 @@ const Posts = ({ posts }: PostsProps) => {
           return;
         }
     // Loop through all posts and fetch like status for each
+        const likedPostId: string[] = [];
         for (const post of posts) {
+           // Array to store post IDs that the user has liked
           try {
             const likesCount = await like.getLikesByPostID(post._id);
+            const { request: likedRequest } = like.getLikeByOwner(post._id, userId);
+            const likedResponse = await likedRequest;
+            // Set isLiked state this post
+            if ((await likedRequest).data.liked) {
+              likedPostId.push(post._id);              
+            }            
+            setUpdatedPosts((prevPosts) =>
+              prevPosts.map((p) =>
+                p._id === post._id
+                  ? { ...p, isLiked: likedResponse.data.liked }
+                  : p
+              )
+            );
+            
             return { ...post, likesCount }; // Add likesCount to post
-            // const { request: likedRequest } = like.getLikeByOwner(post._id, userId);
-            // const likedResponse = await likedRequest;
-            // // Update the like status for the post
-            // setUpdatedPosts((prevPosts) =>
-            //   prevPosts.map((p) =>
-            //     p._id === post._id
-            //       ? {
-            //           ...p,
-            //           likesCount: likedResponse.data.likesCount, 
-                      
-            //         }
-            //       : p
-            //   )
-            // );
-            // console.log("likesCount:", likedResponse.data.likesCount)
-            // console.log("likesCount:", likesActiveCount)
-
-            // // Set isLiked state this post
-            // setIsLiked(() => {
-            //   console.log("isLiked:", likedResponse.data.liked);
-            //   return likedResponse.data.liked;
-            // });
-  
           } catch (error) {
             console.error("Error fetching like status:", error);
           }
         }
+        setLikedPosts(likedPostId);
+        console.log(likedPostId);
       };
   
       fetchLikeStatus();
@@ -231,76 +224,10 @@ const Posts = ({ posts }: PostsProps) => {
           )
         );
       }
-      // if (likedPosts[postId]) {
-      //   await like.DeleteLike(postId);
-      //   setLikedPosts((prev) => ({ ...prev, [postId]: false }));
-      //   setUpdatedPosts((prevPosts) =>
-      //     prevPosts.map((post) =>
-      //       post._id === postId
-      //         ? { ...post, likesCount: Math.max(0, post.likesCount - 1) }
-      //         : post
-      //     )
-      //   );
-      // } else {
-      //   await like.CreateLike(postId);
-      //   setLikedPosts((prev) => ({ ...prev, [postId]: true }));
-      //   setUpdatedPosts((prevPosts) =>
-      //     prevPosts.map((post) =>
-      //       post._id === postId
-      //         ? { ...post, likesCount: post.likesCount + 1 }
-      //         : post
-      //     )
-      //   );
-      // }
     } catch (error) {
       console.error("Error toggling like:", error);
     }
   };
-
-
-  // const handleLike = async (postId: string) => {
-  //   const accessToken = Cookies.get("accessToken");
-  //   if (!accessToken) {
-  //     console.log("Access token not found");
-  //     return;
-  //   }
-  
-  //   // Decode the JWT token to extract user ID
-  //   const payload = JSON.parse(atob(accessToken.split('.')[1]));
-  //   const userId = payload._id;
-  
-  //   if (!userId) {
-  //     console.error("User ID not found in token");
-  //     return;
-  //   }
-  
-  //   try {
-  //     if (likedPosts[postId]) {
-  //       await like.DeleteLike(postId);
-  //       setLikedPosts((prev) => ({ ...prev, [postId]: false }));
-  //       setUpdatedPosts((prevPosts) =>
-  //         prevPosts.map((post) =>
-  //           post._id === postId
-  //             ? { ...post, likesCount: Math.max(0, post.likesCount - 1) }
-  //             : post
-  //         )
-  //       );
-  //     } else {
-  //       await like.CreateLike(postId);
-  //       setLikedPosts((prev) => ({ ...prev, [postId]: true }));
-  //       setUpdatedPosts((prevPosts) =>
-  //         prevPosts.map((post) =>
-  //           post._id === postId
-  //             ? { ...post, likesCount: post.likesCount + 1 }
-  //             : post
-  //         )
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.error("Error toggling like:", error);
-  //   }
-  // };
-  
 
   // Check if the current user is the owner of the post
   const isUserPost = (post: Post) => {
@@ -357,10 +284,11 @@ const Posts = ({ posts }: PostsProps) => {
                   }}
                   onClick={() => handleLike(post._id)}
                 >
-                  {likedPosts[post._id] ? 'Unlike' : 'Like'}
+                   
                   <img
+                    // src={likedPosts.includes(post._id) ? '/after_like.png' : '/before_like.png'}
+                    
                     src={likedPosts[post._id] ? '/after_like.png' : '/before_like.png'}
-                    alt={likedPosts[post._id] ? 'Liked' : 'Like'}
                     style={{ width: '24px', height: '24px' }}
                   />
                 </button>
