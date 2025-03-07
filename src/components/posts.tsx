@@ -93,31 +93,30 @@ const Posts = ({ posts }: PostsProps) => {
     // Loop through all posts and fetch like status for each
         for (const post of posts) {
           try {
-            const { request: likedRequest } = like.getLikeByOwner(post._id, userId);
-            const likedResponse = await likedRequest;
-            console.log("likesCount:", likedResponse.data.likesCount)
-
-
-            // Update the like status for the post
-            setUpdatedPosts((prevPosts) =>
-              prevPosts.map((p) =>
-                p._id === post._id
-                  ? {
-                      ...p,
-                      likesCount: likedResponse.data.likesCount, 
+            const likesCount = await like.getLikesByPostID(post._id);
+            return { ...post, likesCount }; // Add likesCount to post
+            // const { request: likedRequest } = like.getLikeByOwner(post._id, userId);
+            // const likedResponse = await likedRequest;
+            // // Update the like status for the post
+            // setUpdatedPosts((prevPosts) =>
+            //   prevPosts.map((p) =>
+            //     p._id === post._id
+            //       ? {
+            //           ...p,
+            //           likesCount: likedResponse.data.likesCount, 
                       
-                    }
-                  : p
-              )
-            );
-            console.log("likesCount:", likedResponse.data.likesCount)
-            console.log("likesCount:", likesActiveCount)
+            //         }
+            //       : p
+            //   )
+            // );
+            // console.log("likesCount:", likedResponse.data.likesCount)
+            // console.log("likesCount:", likesActiveCount)
 
-            // Set isLiked state this post
-            setIsLiked(() => {
-              console.log("isLiked:", likedResponse.data.liked);
-              return likedResponse.data.liked;
-            });
+            // // Set isLiked state this post
+            // setIsLiked(() => {
+            //   console.log("isLiked:", likedResponse.data.liked);
+            //   return likedResponse.data.liked;
+            // });
   
           } catch (error) {
             console.error("Error fetching like status:", error);

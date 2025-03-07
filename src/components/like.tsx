@@ -27,4 +27,12 @@ const getLikeByOwner = (postId: string, userId: string) => {
     return { request, abort: () => abortController.abort() };
 }
 
-export default { CreateLike, DeleteLike, getLikeByOwner };
+// Get Like by post ID
+const getLikesByPostID = (postId: string) => {
+    const abortController = new AbortController();
+    const request = axiosInstance.get(`/likes/likesCount/${postId}`, { signal: abortController.signal });
+    console.log(request);
+    return { request, abort: () => abortController.abort() };
+}
+
+export default { CreateLike, DeleteLike, getLikeByOwner, getLikesByPostID };
