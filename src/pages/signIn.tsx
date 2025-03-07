@@ -29,8 +29,8 @@
     
         if (response.status === 200) {
           const data = response.data;
-          Cookies.set('accessToken', data.accessToken, { path: '/', secure: true, sameSite: 'Strict' });
-          Cookies.set('refreshToken', data.refreshToken, { path: '/', secure: true, sameSite: 'Strict' });
+          Cookies.set('accessToken', data.accessToken, { path: '/', sameSite: 'Strict' });
+          Cookies.set('refreshToken', data.refreshToken, { path: '/', sameSite: 'Strict' });
 
           onSignIn();
           setSuccess('Login successful! Redirecting...');
@@ -61,8 +61,8 @@
         } 
     
         const data = res.data;
-        Cookies.set('accessToken', data.accessToken, { path: '/', secure: true, sameSite: 'Strict' });
-        Cookies.set('refreshToken', data.refreshToken, { path: '/', secure: true, sameSite: 'Strict' });
+        Cookies.set('accessToken', data.accessToken, { path: '/',  sameSite: 'Strict' });
+        Cookies.set('refreshToken', data.refreshToken, { path: '/', sameSite: 'Strict' });
     
         onSignIn();
         setSuccess('Login successful! Redirecting...');
