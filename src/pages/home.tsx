@@ -12,6 +12,8 @@ interface Post {
   owner: string;
   comments?: { commenter: string; content: string }[];
   commentCount?: number;
+  likesCount: number;
+  isLiked: boolean;
 }
 
 const Home: React.FC = () => {

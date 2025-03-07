@@ -14,6 +14,8 @@ const UserPage = () => {
     owner: string;
     comments?: { commenter: string; content: string }[];
     commentCount?: number;
+    likesCount: number;
+    isLiked: boolean;
   }
   
   interface UserInfo {
