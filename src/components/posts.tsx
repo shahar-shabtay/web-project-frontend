@@ -37,10 +37,13 @@ if (!accessToken) {
 }
 
 const Posts = ({ posts }: PostsProps) => {
+  const likesCount: number = 0;
   const [newComments, setNewComments] = useState<{ [key: string]: string }>({});
   const [updatedPosts, setUpdatedPosts] = useState<Post[]>(posts);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState({ title: '', content: '' });
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesActiveCount, setlikesActiveCount] = useState<number>(likesCount || 0);
   // const [isLiked, setIsLiked] = useState<boolean>(false);
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
 
@@ -74,28 +77,52 @@ const Posts = ({ posts }: PostsProps) => {
     // Fetch likes counts for each post
     useEffect(() => {
       setUpdatedPosts(posts);
-      const fetchLikesCounts = async () => {
+      const fetchLikeStatus = async () => {
+        const accessToken = Cookies.get("accessToken");
+        if (!accessToken) {
+          console.log("Access token not found");
+          return;
+        }
+        // Decode the JWT token to extract user ID
+        const payload = JSON.parse(atob(accessToken.split('.')[1]));
+        const userId = payload._id;
+        if (!userId) {
+          console.error("User ID not found in token");
+          return;
+        }
+    // Loop through all posts and fetch like status for each
         for (const post of posts) {
           try {
-            const likesResponse = await axiosInstance.get(`/likes/like/${post._id}`);
-            const likesCount = likesResponse.data.likesCount;
-            
+            const { request: likedRequest } = like.getLikeByOwner(post._id, userId);
+            const likedResponse = await likedRequest;
+
+            // Update the like status for the post
             setUpdatedPosts((prevPosts) =>
               prevPosts.map((p) =>
                 p._id === post._id
-                  ? { ...p, likesCount: likesCount } // Update only likesCount
+                  ? {
+                      ...p,
+                      likesCount: likedResponse.data.likesCount, // Assuming you want to update the likes count too
+                    }
                   : p
               )
             );
+
+            // Set isLiked state this post
+            setIsLiked(() => {
+              return likedResponse.data.liked;
+            });
+  
           } catch (error) {
-            console.error(`Error fetching likes for post ${post._id}:`, error);
+            console.error("Error fetching like status:", error);
           }
         }
       };
   
-      fetchLikesCounts();
-    }, [posts]);
-
+      fetchLikeStatus();
+    }, [posts]);  // Re-run if user or post._id changes
+  
+    
     // Add a comment to a post
   const handleComment = (postId: string) => {
     const commentContent = newComments[postId]?.trim();
@@ -158,10 +185,24 @@ const Posts = ({ posts }: PostsProps) => {
   };
 
   const handleLike = async (postId: string) => {
+    const accessToken = Cookies.get("accessToken");
+    if (!accessToken) {
+      console.log("Access token not found");
+      return;
+    }
+
+    const payload = JSON.parse(atob(accessToken.split('.')[1]));
+    const userId = payload._id;
+
+    if (!userId) {
+      console.error("User ID not found in token");
+      return;
+    }
+
     try {
       if (likedPosts[postId]) {
         await like.DeleteLike(postId);
-        setLikedPosts({ ...likedPosts, [postId]: false });
+        setLikedPosts((prev) => ({ ...prev, [postId]: false }));
         setUpdatedPosts((prevPosts) =>
           prevPosts.map((post) =>
             post._id === postId
@@ -171,7 +212,7 @@ const Posts = ({ posts }: PostsProps) => {
         );
       } else {
         await like.CreateLike(postId);
-        setLikedPosts({ ...likedPosts, [postId]: true });
+        setLikedPosts((prev) => ({ ...prev, [postId]: true }));
         setUpdatedPosts((prevPosts) =>
           prevPosts.map((post) =>
             post._id === postId
@@ -185,6 +226,50 @@ const Posts = ({ posts }: PostsProps) => {
     }
   };
 
+
+  // const handleLike = async (postId: string) => {
+  //   const accessToken = Cookies.get("accessToken");
+  //   if (!accessToken) {
+  //     console.log("Access token not found");
+  //     return;
+  //   }
+  
+  //   // Decode the JWT token to extract user ID
+  //   const payload = JSON.parse(atob(accessToken.split('.')[1]));
+  //   const userId = payload._id;
+  
+  //   if (!userId) {
+  //     console.error("User ID not found in token");
+  //     return;
+  //   }
+  
+  //   try {
+  //     if (likedPosts[postId]) {
+  //       await like.DeleteLike(postId);
+  //       setLikedPosts((prev) => ({ ...prev, [postId]: false }));
+  //       setUpdatedPosts((prevPosts) =>
+  //         prevPosts.map((post) =>
+  //           post._id === postId
+  //             ? { ...post, likesCount: Math.max(0, post.likesCount - 1) }
+  //             : post
+  //         )
+  //       );
+  //     } else {
+  //       await like.CreateLike(postId);
+  //       setLikedPosts((prev) => ({ ...prev, [postId]: true }));
+  //       setUpdatedPosts((prevPosts) =>
+  //         prevPosts.map((post) =>
+  //           post._id === postId
+  //             ? { ...post, likesCount: post.likesCount + 1 }
+  //             : post
+  //         )
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error("Error toggling like:", error);
+  //   }
+  // };
+  
 
   // Check if the current user is the owner of the post
   const isUserPost = (post: Post) => {
@@ -248,7 +333,7 @@ const Posts = ({ posts }: PostsProps) => {
                     style={{ width: '24px', height: '24px' }}
                   />
                 </button>
-                <span>{post.likesCount} Likes</span>
+                <span>{post.likesCount || 0 } Likes</span>
               </div>
             <div className="comment-section">
               <input
