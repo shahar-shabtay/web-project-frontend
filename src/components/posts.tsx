@@ -13,6 +13,7 @@ interface Post {
   commentCount?: number;
   comments?: { commenter: string; content: string }[];
   likesCount: number;
+  isLiked: boolean;
 };
 
 
@@ -72,56 +73,55 @@ const Posts = ({ posts }: PostsProps) => {
     fetchCommentCounts();
   }, [posts]);
 
-    // Fetch likes counts for each post
-    useEffect(() => {
-      setUpdatedPosts(posts);
-      const fetchLikeStatus = async () => {
-        const accessToken = Cookies.get("accessToken");
-        if (!accessToken) {
-          console.log("Access token not found");
-          return;
-        }
-        // Decode the JWT token to extract user ID
-        const payload = JSON.parse(atob(accessToken.split('.')[1]));
-        const userId = payload._id;
-        if (!userId) {
-          console.error("User ID not found in token");
-          return;
-        }
-    // Loop through all posts and fetch like status for each
-        const likedPostId: string[] = [];
-        for (const post of posts) {
-           // Array to store post IDs that the user has liked
+  useEffect(() => {
+    if (!posts.length) return;
+  
+    setUpdatedPosts(posts); // Initialize state with posts
+  
+    const fetchLikeStatus = async () => {
+      const accessToken = Cookies.get("accessToken");
+      if (!accessToken) {
+        console.log("Access token not found");
+        return;
+      }
+  
+      // Decode JWT token to get user ID
+      const payload = JSON.parse(atob(accessToken.split('.')[1]));
+      const userId = payload._id;
+      if (!userId) {
+        console.error("User ID not found in token");
+        return;
+      }
+  
+      const likedPostIds: string[] = [];
+      const updatedPostData: Post[] = await Promise.all(
+        posts.map(async (post): Promise<Post> => {
           try {
-            const likesCount = await like.getLikesByPostID(post._id);
             const { request: likedRequest } = like.getLikeByOwner(post._id, userId);
             const likedResponse = await likedRequest;
-            // Set isLiked state this post
-            if ((await likedRequest).data.liked) {
-              likedPostId.push(post._id);              
-            }            
-            setUpdatedPosts((prevPosts) =>
-              prevPosts.map((p) =>
-                p._id === post._id
-                  ? { ...p, isLiked: likedResponse.data.liked }
-                  : p
-              )
-            );
-            
-            return { ...post, likesCount }; // Add likesCount to post
+  
+            if (likedResponse.data.liked) {
+              likedPostIds.push(post._id);
+            }
+  
+            return { 
+              ...post, 
+              isLiked: likedResponse.data.liked, 
+            };
           } catch (error) {
             console.error("Error fetching like status:", error);
+            return { ...post, isLiked: false, likesCount: 0 }; // Ensure type safety
           }
-        }
-        setLikedPosts(likedPostId);
-        console.log(likedPostId);
-      };
+        })
+      );
   
-      fetchLikeStatus();
-    }, [posts]);  // Re-run if user or post._id changes
+      setUpdatedPosts(updatedPostData);
+      setLikedPosts(likedPostIds);
+    };
   
-    
-    // Add a comment to a post
+    fetchLikeStatus();
+  }, [posts]);
+      // Add a comment to a post
   const handleComment = (postId: string) => {
     const commentContent = newComments[postId]?.trim();
     if (commentContent) {
@@ -188,21 +188,21 @@ const Posts = ({ posts }: PostsProps) => {
       console.log("Access token not found");
       return;
     }
-
+  
     const payload = JSON.parse(atob(accessToken.split('.')[1]));
     const userId = payload._id;
-
+  
     if (!userId) {
       console.error("User ID not found in token");
       return;
     }
-
+  
     try {
-      if(isLiked){
+      if (likedPosts.includes(postId)) {
         await like.DeleteLike(postId);
-        setIsLiked(false);
-        setLikedPosts((prev) => ({ ...prev, [postId]: false }));
-        // setlikesActiveCount((prevCount) => Math.max(0, prevCount - 1));
+  
+        setLikedPosts((prev) => prev.filter((id) => id !== postId)); // Remove from likedPosts
+  
         setUpdatedPosts((prevPosts) =>
           prevPosts.map((post) =>
             post._id === postId
@@ -210,16 +210,15 @@ const Posts = ({ posts }: PostsProps) => {
               : post
           )
         );
-      }
-      else {
+      } else {
         await like.CreateLike(postId);
-        setIsLiked(true);
-        setLikedPosts((prev) => ({ ...prev, [postId]: true }));
-        // setlikesActiveCount((prevCount) => Math.max(0, prevCount + 1));
+  
+        setLikedPosts((prev) => [...prev, postId]); // Add to likedPosts
+  
         setUpdatedPosts((prevPosts) =>
           prevPosts.map((post) =>
             post._id === postId
-              ? { ...post, likesCount: Math.max(0, (post.likesCount || 0) + 1) }
+              ? { ...post, likesCount: (post.likesCount || 0) + 1 }
               : post
           )
         );
@@ -228,7 +227,7 @@ const Posts = ({ posts }: PostsProps) => {
       console.error("Error toggling like:", error);
     }
   };
-
+  
   // Check if the current user is the owner of the post
   const isUserPost = (post: Post) => {
     if (!accessToken) {
@@ -249,16 +248,30 @@ const Posts = ({ posts }: PostsProps) => {
               <input
                 type="text"
                 value={editFormData.title}
-                onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                onChange={(e) =>
+                  setEditFormData({ ...editFormData, title: e.target.value })
+                }
                 className="form-control mb-2"
               />
               <textarea
                 value={editFormData.content}
-                onChange={(e) => setEditFormData({ ...editFormData, content: e.target.value })}
+                onChange={(e) =>
+                  setEditFormData({ ...editFormData, content: e.target.value })
+                }
                 className="form-control mb-2"
               />
-              <button className="btn btn-success me-2" onClick={() => handleSaveEdit(post._id)}>Save</button>
-              <button className="btn btn-secondary" onClick={() => setEditingPostId(null)}>Cancel</button>
+              <button
+                className="btn btn-success me-2"
+                onClick={() => handleSaveEdit(post._id)}
+              >
+                Save
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => setEditingPostId(null)}
+              >
+                Cancel
+              </button>
             </div>
           ) : (
             <>
@@ -266,51 +279,77 @@ const Posts = ({ posts }: PostsProps) => {
               <p className="post-content mb-2">{post.content}</p>
               {isUserPost(post) && (
                 <div className="user-actions mb-2">
-                  <button className="btn btn-primary me-2" onClick={() => handleEditClick(post)}>Edit</button>
-                  <button className="btn btn-danger" onClick={() => handleDelete(post._id)}>Delete</button>
+                  <button
+                    className="btn btn-primary me-2"
+                    onClick={() => handleEditClick(post)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(post._id)}
+                  >
+                    Delete
+                  </button>
                 </div>
               )}
             </>
           )}
           <div className="post-actions">
             <div className="like-section">
-                <button
-                  className="like-button btn"
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => handleLike(post._id)}
-                >
-                   
-                  <img
+              <button
+                className="like-button btn"
+                style={{
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                }}
+                onClick={() => handleLike(post._id)}
+              >
+                {/* <img
                     // src={likedPosts.includes(post._id) ? '/after_like.png' : '/before_like.png'}
-                    
                     src={likedPosts[post._id] ? '/after_like.png' : '/before_like.png'}
                     style={{ width: '24px', height: '24px' }}
-                  />
-                </button>
-                {/* <span>{likesActiveCount} Likes</span> */}
-                <span>{post.likesCount || 0 } Likes</span>
-              </div>
+                  /> */}
+                <img
+                  src={
+                    likedPosts.includes(post._id)
+                      ? "/after_like.png"
+                      : "/before_like.png"
+                  }
+                  style={{ width: "24px", height: "24px" }}
+                  alt="like button"
+                />
+              </button>
+              {/* <span>{likesActiveCount} Likes</span> */}
+              <span>{post.likesCount || 0} Likes</span>
+            </div>
             <div className="comment-section">
               <input
                 type="text"
-                value={newComments[post._id] || ''}
-                onChange={(e) => setNewComments({ ...newComments, [post._id]: e.target.value })}
+                value={newComments[post._id] || ""}
+                onChange={(e) =>
+                  setNewComments({ ...newComments, [post._id]: e.target.value })
+                }
                 placeholder="Add a comment..."
                 className="comment-input"
               />
-              <button className="comment-button" onClick={() => handleComment(post._id)}>Comment</button>
+              <button
+                className="comment-button"
+                onClick={() => handleComment(post._id)}
+              >
+                Comment
+              </button>
             </div>
             <div className="comments-overview">
               <span>{post.commentCount || 0} comments</span>
-              <button 
-                className="btn btn-link" 
+              <button
+                className="btn btn-link"
                 onClick={() => {
-                  navigate(`/comments/${post._id}/${encodeURIComponent(post.title)}`);
+                  navigate(
+                    `/comments/${post._id}/${encodeURIComponent(post.title)}`
+                  );
                 }}
               >
                 View Comments
