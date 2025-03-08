@@ -22,8 +22,9 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 # Copy the build files to the Nginx HTML directory
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose port 80 for Nginx
+# Expose ports http and https
 EXPOSE 80
+EXPOSE 443
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
