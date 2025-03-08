@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 const axiosInstance = axios.create({
   // baseURL: 'https://localhost:3000/api',
-  baseURL: 'https://193.106.55.231/api',
+  baseURL: 'https://node71.cs.colman.ac.il/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
 
       try {
         // Call the refresh token endpoint
-        const refreshResponse = await axios.post('https://193.106.55.231/api/refresh-token', {
+        const refreshResponse = await axios.post('https://node71.cs.colman.ac.il/api/refresh-token', {
           token: Cookies.get('refreshToken'),
         });
 
