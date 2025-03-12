@@ -12,6 +12,8 @@ const CreatePostPage: React.FC = () => {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setImage(event.target.files[0]);
+    } else {
+      setImage(null);
     }
   };
 
@@ -22,7 +24,7 @@ const CreatePostPage: React.FC = () => {
     formData.append("file", image);
 
     try {
-      const response = await axiosInstance.post("/file?file=wusha.jpg", formData, {
+      const response = await axiosInstance.post("/file", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -36,15 +38,15 @@ const CreatePostPage: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     const accessToken = Cookies.get("accessToken");
     if (!accessToken) {
       console.error("No access token found. Please log in.");
       return;
     }
-    
+
     const imageUrl = await uploadImage();
-    
+
     const postData = { title, content, owner, imageUrl };
 
     try {
@@ -53,7 +55,7 @@ const CreatePostPage: React.FC = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      
+
       if (response.status === 201) {
         console.log("Post created:", response.data);
         window.location.reload();
@@ -70,7 +72,7 @@ const CreatePostPage: React.FC = () => {
       <div className="form-row">
         <label className="upload-label">Upload Image:</label>
         <div className="file-input-container">
-            <input type="file" accept="image/*" onChange={handleImageChange} />
+          <input type="file" accept="image/*" onChange={handleImageChange} />
         </div>
       </div>
       <div className="form-row">
