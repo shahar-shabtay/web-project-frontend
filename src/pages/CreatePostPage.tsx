@@ -67,18 +67,20 @@ const CreatePostPage: React.FC = () => {
 
   return (
     <form className="create-post-form" onSubmit={handleSubmit}>
-      <label className="upload-label">
-        Upload Image:
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-      </label>
-      <label>
-        Title:
+      <div className="form-row">
+        <label className="upload-label">Upload Image:</label>
+        <div className="file-input-container">
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+        </div>
+      </div>
+      <div className="form-row">
+        <label>Title:</label>
         <input className="post-box" type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
-      </label>
-      <label>
-        Content:
+      </div>
+      <div className="form-row">
+        <label>Content:</label>
         <textarea className="post-box" value={content} onChange={(e) => setContent(e.target.value)} required />
-      </label>
+      </div>
       <button className="create-post-btn" type="submit">Create Post</button>
     </form>
   );
