@@ -29,7 +29,7 @@ const CreatePostPage: React.FC = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      return response.data.fileUrl;
+      return response.data.imageUrl;
     } catch (error) {
       console.error("Error uploading image:", error);
       return null;
@@ -46,7 +46,7 @@ const CreatePostPage: React.FC = () => {
     }
 
     const imageUrl = await uploadImage();
-
+    console.log("Image URL:", imageUrl);
     const postData = { title, content, owner, imageUrl };
 
     try {
