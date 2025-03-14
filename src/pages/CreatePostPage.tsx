@@ -46,7 +46,6 @@ const CreatePostPage: React.FC = () => {
     }
 
     const imageUrl = await uploadImage();
-    console.log("Image URL:", imageUrl);
     const postData = { title, content, owner, imageUrl };
 
     try {
