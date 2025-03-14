@@ -14,6 +14,7 @@ interface Post {
   commentCount?: number;
   likesCount: number;
   isLiked: boolean;
+  imageUrl?: string;
 }
 
 const Home: React.FC = () => {

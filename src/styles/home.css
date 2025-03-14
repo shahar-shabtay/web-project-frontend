@@ -1,4 +1,26 @@
+  .post-title {
+    font-size: 1.25rem; /* Set font size */
+    font-weight: bold; /* Make the title bold */
+    margin-bottom: 10px; /* Space below title */
+    color: #333; /* Dark text color */
+  }
+
+  /* Post Content Styling */
+  .post-content {
+    font-size: 1rem; /* Set font size */
+    color: #555; /* Slightly lighter text color */
+    margin-bottom: 15px; /* Space below content */
+    line-height: 1.5; /* Line spacing for readability */
+  }
   
+  /* Post Actions Section */
+  .post-actions {
+    display: flex;
+    justify-content: space-between; /* Space between elements */
+    align-items: center;
+    margin-top: 20px;
+  }
+    
   .like-button {
     background-color: #800000; /* Coral color */
     color: white;
@@ -32,18 +54,21 @@
   
   .card-container {
     width: 100%;
-    max-width: 800px; /* Maximum width of the card */
+    /* width: 60px; */
+    max-width: 600px; /* Reduced max-width for a smaller container */
     margin: 0 auto; /* Center horizontally */
     padding: 1.5rem; /* Padding inside the card */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Card shadow */
     background-color: #fff; /* Background color for the card */
-    border-radius: 8px; /* Rounded corners for the card */
+    border-radius: 10px; /* Rounded corners for the card */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center; /* Center the text */
+    border: 1px solid #ddd; 
   }
-  
+    
   .card-content {
     width: 100%;
     padding: 1rem; /* Padding for card content */
@@ -179,4 +204,58 @@
     max-width: 500px;
     width: 100%;
   }
+
+  .post-image-wrapper {
+    width: 100%;
+    max-width: 500px; /* You can adjust this based on the desired width */
+    margin: 0 auto; /* Center the wrapper horizontally */
+    display: flex; /* Use flexbox to center the image */
+    justify-content: center; /* Horizontally center the image */
+    text-align: center; /* Center the content inside the wrapper */
+  }
   
+  .post-image {
+    width: 20%; /* Ensures the image takes full width of the wrapper */
+    max-height: 300px; /* Limit the image height */
+    object-fit: contain; /* Ensures the aspect ratio is maintained */
+    border-radius: 8px;
+  }
+    
+  .post-image:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+  }
+  
+
+/* User Actions (Edit, Delete) */
+.user-actions {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left */
+  gap: 10px; /* Add some space between the buttons */
+  width: 100%;
+}
+
+.user-actions button {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+/* Save and Cancel Buttons for Editing */
+.user-actions .btn-success {
+  background-color: #8b532a;
+  color: white;
+}
+
+.user-actions .btn-success:hover {
+  background-color: #6b2f04; /* Darker green on hover */
+}
+
+.user-actions .btn-secondary {
+  background-color: #eb3f0b;
+  color: white;
+}
+
+.user-actions .btn-secondary:hover {
+  background-color: #b52e05; /* Darker gray on hover */
+}
