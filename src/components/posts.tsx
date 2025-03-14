@@ -14,6 +14,7 @@ interface Post {
   comments?: { commenter: string; content: string }[];
   likesCount: number;
   isLiked: boolean;
+  imageUrl?: string;
 };
 
 
@@ -242,7 +243,7 @@ const Posts = ({ posts }: PostsProps) => {
   return (
     <div>
       {updatedPosts.map((post) => (
-        <div key={post._id} className="post border rounded p-3 mb-3">
+        <div key={post._id} className="card-container">
           {editingPostId === post._id ? (
             <div>
               <input
@@ -275,10 +276,18 @@ const Posts = ({ posts }: PostsProps) => {
             </div>
           ) : (
             <>
-              <h4 className="post-title mb-2">{post.title}</h4>
-              <p className="post-content mb-2">{post.content}</p>
+            
+              {post.imageUrl && (
+                <img
+                  src={post.imageUrl} // Assuming post.imageUrl contains the full URL
+                  alt="Post Image"
+                  className="post-image"
+                />
+              )}
+              <h4 className="post-title">{post.title}</h4>
+              <p className="post-content">{post.content}</p>
               {isUserPost(post) && (
-                <div className="user-actions mb-2">
+                <div className="user-actions">
                   <button
                     className="btn btn-primary me-2"
                     onClick={() => handleEditClick(post)}
