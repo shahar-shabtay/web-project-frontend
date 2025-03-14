@@ -123,4 +123,29 @@
       font-size: 14px;
     }
   }
+
+  .create-post-form .form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
   
+  .create-post-form .form-row label {
+    width: 120px;
+    text-align: left;
+    margin-right: 10px;
+  }
+  
+  .create-post-form .post-box {
+    width: 300px;
+  }
+  
+  .create-post-form .file-input-container {
+      flex: 1; /* Allow container to take remaining space */
+      display: flex;
+      align-items: center; /* Vertically align the input */
+  }
+  
+  .create-post-form .file-input-container input[type="file"] {
+      margin-left: auto;
+  }
