@@ -20,32 +20,7 @@
     align-items: center;
     margin-top: 20px;
   }
-  
-  .user-actions {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .user-actions .btn-success {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .user-actions .btn-success:hover {
-    background-color: #218838; /* Darker green on hover */
-  }  
-
-  .user-actions .btn-secondary {
-    background-color: #6c757d;
-    color: white;
-  }
-  
-  .user-actions .btn-secondary:hover {
-    background-color: #5a6268; /* Darker gray on hover */
-  }
-  
-  
+    
   .like-button {
     background-color: #800000; /* Coral color */
     color: white;
@@ -251,3 +226,36 @@
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
   }
   
+
+/* User Actions (Edit, Delete) */
+.user-actions {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left */
+  gap: 10px; /* Add some space between the buttons */
+  width: 100%;
+}
+
+.user-actions button {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+/* Save and Cancel Buttons for Editing */
+.user-actions .btn-success {
+  background-color: #8b532a;
+  color: white;
+}
+
+.user-actions .btn-success:hover {
+  background-color: #6b2f04; /* Darker green on hover */
+}
+
+.user-actions .btn-secondary {
+  background-color: #eb3f0b;
+  color: white;
+}
+
+.user-actions .btn-secondary:hover {
+  background-color: #b52e05; /* Darker gray on hover */
+}

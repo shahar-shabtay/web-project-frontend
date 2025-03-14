@@ -289,13 +289,13 @@ const Posts = ({ posts }: PostsProps) => {
               {isUserPost(post) && (
                 <div className="user-actions">
                   <button
-                    className="btn btn-primary me-2"
+                    className="btn btn-success"
                     onClick={() => handleEditClick(post)}
                   >
                     Edit
                   </button>
                   <button
-                    className="btn btn-danger"
+                    className="btn btn-secondary"
                     onClick={() => handleDelete(post._id)}
                   >
                     Delete
