@@ -149,3 +149,62 @@
   .create-post-form .file-input-container input[type="file"] {
       margin-left: auto;
   }
+
+  /* Modal container */
+  .modal-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    box-shadow: 24px;
+    padding: 16px;
+    width: 400px;
+  }
+
+  /* Typography title */
+  .modal-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  /* Stepper container */
+  .stepper-container {
+    margin-top: 16px;
+  }
+
+  /* Text fields */
+  .text-field {
+    width: 100%;
+  }
+
+  /* Multiline text fields */
+  .text-field-multiline {
+    width: 100%;
+    height: 120px;
+  }
+
+  /* Button container */
+  .button-container {
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Back Button */
+  .button-back {
+    background-color: transparent;
+    border: 1px solid #1976d2; /* Blue color for outlined button */
+    color: #1976d2; /* Blue color for text */
+  }
+
+  /* Next/Submit Buttons */
+  .button-next-submit {
+    background-color: #1976d2; /* Blue color */
+    color: white;
+    border: none;
+  }
+
+  .button-next-submit:hover {
+    background-color: #1565c0; /* Darker blue on hover */
+  }

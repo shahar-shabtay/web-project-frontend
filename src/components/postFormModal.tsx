@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import "./createPostPage.css";
-import "./postForm.css"
 import {
   Modal,
   Box,
