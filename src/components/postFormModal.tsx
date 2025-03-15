@@ -61,19 +61,8 @@ const PostFormModal = ({ open, onClose }: { open: boolean; onClose: () => void }
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          bgcolor: "background.paper",
-          boxShadow: 24,
-          p: 4,
-          width: 400,
-        }}
-      >
-        <Typography variant="h6">Create a New Post</Typography>
+      <Box className="modal-container">
+        <Typography className="modal-title">Create a New Post</Typography>
         <Stepper activeStep={activeStep}>
           {["Step 1", "Step 2", "Step 3"].map((label) => (
             <Step key={label}>
@@ -81,14 +70,14 @@ const PostFormModal = ({ open, onClose }: { open: boolean; onClose: () => void }
             </Step>
           ))}
         </Stepper>
-        <Box sx={{ mt: 2 }}>
+        <Box className="stepper-container">
           {activeStep === 0 && (
             <TextField
               label="Post Title"
               name="title"
               value={formData.title}
               onChange={handleChange}
-              fullWidth
+              className="text-field"
             />
           )}
           {activeStep === 1 && (
@@ -97,7 +86,7 @@ const PostFormModal = ({ open, onClose }: { open: boolean; onClose: () => void }
               name="description"
               value={formData.description}
               onChange={handleChange}
-              fullWidth
+              className="text-field text-field-multiline"
               multiline
               rows={4}
             />
@@ -108,23 +97,23 @@ const PostFormModal = ({ open, onClose }: { open: boolean; onClose: () => void }
               name="content"
               value={formData.content}
               onChange={handleChange}
-              fullWidth
+              className="text-field text-field-multiline"
               multiline
               rows={4}
             />
           )}
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+          <Box className="button-container">
             {activeStep > 0 && (
-              <Button variant="outlined" onClick={handleBack}>
+              <Button className="button-back" onClick={handleBack}>
                 Back
               </Button>
             )}
             {activeStep < 2 ? (
-              <Button variant="contained" onClick={handleNext}>
+              <Button className="button-next-submit" onClick={handleNext}>
                 Next
               </Button>
             ) : (
-              <Button variant="contained" onClick={handleSubmit}>
+              <Button className="button-next-submit" onClick={handleSubmit}>
                 Submit
               </Button>
             )}
