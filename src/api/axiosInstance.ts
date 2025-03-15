@@ -26,21 +26,23 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     // Handle Token Expiration Error
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    if (error.response && error.response.status === 403 && !originalRequest._retry) {
+      console.log('Token expired. Attempting refresh...');
       originalRequest._retry = true;
-
+      
       try {
         // Call the refresh token endpoint
         const refreshResponse = await axios.post('https://node71.cs.colman.ac.il/api/refresh-token', {
           token: Cookies.get('refreshToken'),
         });
-
         const newAccessToken = refreshResponse.data.accessToken;
         Cookies.set('accessToken', newAccessToken, { secure: true, sameSite: 'Strict' });
 
         // Retry the original request with the new token
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        console.log('Retrying original request with new token...');
         return axiosInstance(originalRequest);
+
       } catch (refreshError) {
         console.error('Token refresh failed:', refreshError);
         // window.location.href = '/signIn'; // Redirect to login if refresh fails

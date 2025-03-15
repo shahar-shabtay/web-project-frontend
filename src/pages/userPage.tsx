@@ -13,12 +13,15 @@ const UserPage = () => {
     content: string;
     owner: string;
     commentCount?: number;
-    comments?: { commenter: string; content: string }[];
+    likesCount: number;
+    isLiked: boolean;
+    imageUrl?: string;
   }
   
   interface UserInfo {
     email: string;
     username: string;
+    profileImage?: string; // Adding profileImage field
   }
     
   const [posts, setPosts] = useState<Post[]>([]);
@@ -26,6 +29,9 @@ const UserPage = () => {
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ username: '' });
+  const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
   
   const accessToken = Cookies.get("accessToken");
     
@@ -45,8 +51,15 @@ const UserPage = () => {
   const fetchUserInfo = async () => {
     try {
       const response = await axiosInstance.get(`/users/${userId}`);
+      
+      // Ensure imageUrl is set (default fallback if missing)
+      const userData = {
+        ...response.data,
+        profileImage: response.data.imageUrl || '/small_logo.png', // Use a default image if profileImage is not available
+      };
+
       setFormData({ username: response.data.username });
-      setUserInfo(response.data);
+      setUserInfo(userData); // Set the full user info with the imageUrl
     } catch (err) {
       console.error(err);
       setError('Failed to fetch user info');
@@ -54,14 +67,73 @@ const UserPage = () => {
   };
 
   // Update user info
+  // const updateUserInfo = async () => {
+  //   try {
+  //     // If a new profile image exists, upload it first
+  //     let imageUrl = userInfo?.profileImage; // keep old image if no new image is selected
+
+  //     if (newProfileImage) {
+  //       const formData = new FormData();
+  //       formData.append('file', newProfileImage);
+
+  //       const imageResponse = await axiosInstance.post('/file', formData, {
+  //         headers: { 'Content-Type': 'multipart/form-data' },
+  //       });
+
+  //       imageUrl = imageResponse.data.imageUrl; // New image URL
+  //     }
+
+  //     await axiosInstance.put(
+  //       `/users/${userId}`,
+  //       {
+  //         ...formData,
+  //         profileImage: imageUrl, // Update profile image
+  //       },
+  //       {
+  //         headers: { 'Content-Type': 'application/json' },
+  //       }
+  //     );
+
+  //     setUserInfo((prev) => (prev ? { ...prev, ...formData, profileImage: imageUrl } : null));
+  //     setIsEditing(false);
+  //   } catch (err) {
+  //     console.error(err);
+  //     setError('Failed to update user info');
+  //   }
+  // };
+
   const updateUserInfo = async () => {
     try {
-      await axiosInstance.put(`/users/${userId}`, formData,
-        {headers: {'Content-Type': 'application/json'}
+      let imageUrl = userInfo?.profileImage || ''; // Keep old image if no new image is selected
+  
+      if (newProfileImage) {
+        const formData = new FormData();
+        formData.append('file', newProfileImage);
+  
+        // Upload the new image and get the image URL
+        const imageResponse = await axiosInstance.post('/file', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+  
+        imageUrl = imageResponse.data.imageUrl; // New image URL returned from server
+      }
+  
+      // Update user info (including the new image URL) in the DB
+      await axiosInstance.put(
+        `/users/${userId}`,
+        {
+          ...formData,
+          imageUrl: imageUrl, // Use imageUrl instead of profileImage
+        },
+        {
+          headers: { 'Content-Type': 'application/json' },
         }
       );
-
-      setUserInfo(prev => prev ? { ...prev, ...formData } : null);
+  
+      // Re-fetch the user info to get the updated image
+      fetchUserInfo();
+  
+      // Close the edit mode
       setIsEditing(false);
     } catch (err) {
       console.error(err);
@@ -69,6 +141,7 @@ const UserPage = () => {
     }
   };
 
+      
   // Fetch user posts
   const fetchUserPosts = async () => {
     try {
@@ -97,6 +170,17 @@ const UserPage = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      setNewProfileImage(file);
+
+      // Create a preview URL
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl);
+    }
+  };
+  
   return (
     <div>
       <Header />
@@ -113,16 +197,55 @@ const UserPage = () => {
                 </button>
               </div>
               <p className="card-text"><strong>Email:</strong> {userInfo.email}</p>
+              <div className="mb-3 text-center">
+              {userInfo?.profileImage ? (
+                <img
+                  src={userInfo.profileImage}
+                  alt="Profile"
+                  className="img-fluid rounded-circle"
+                  style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                />
+              ) : (
+                <p>No profile image</p>
+              )}
+            </div>
+              {/* Editing Profile */}
               {isEditing ? (
                 <div>
-                  <input type="text" name="username" className="form-control mb-2" value={formData.username}
-                    onChange={handleChange}/>
-                  <button className="btn btn-success btn-sm" onClick={updateUserInfo}>Save</button>
+                  <input
+                    type="text"
+                    name="username"
+                    className="form-control mb-2"
+                    value={formData.username}
+                    onChange={handleChange}
+                  />
+                  <div className="mb-2">
+                    <label htmlFor="profileImage" className="btn btn-secondary btn-sm">
+                      Change Profile Image
+                    </label>
+                    <input
+                      id="profileImage"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="d-none"
+                    />
+                    {previewImage && <img src={previewImage} alt="Preview" className="mt-2" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />}
+                  </div>
+                  <button className="btn btn-success btn-sm" onClick={updateUserInfo}>
+                    Save
+                  </button>
                 </div>
-              ) : (<p className="card-text"><strong>Username:</strong> {userInfo.username}</p>)}
+              ) : (
+                <p className="card-text">
+                  <strong>Username:</strong> {userInfo.username}
+                </p>
+              )}
             </div>
           </div>
-          ) : (<p>Loading...</p>)}
+        ) : (
+          <p>Loading...</p>
+        )}
       </div>
       <div className="container mt-5">
         <div className="card p-3">
