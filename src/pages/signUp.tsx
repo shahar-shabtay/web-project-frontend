@@ -59,11 +59,11 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    const imageUrl = await uploadImage();
-    if (!imageUrl) {
-      setError('Failed to upload profile image. Please try again.');
-      return;
+    let imageUrl = await uploadImage();
+    if (imageUrl == null) {
+      imageUrl = ''; // Set a default image URL if none is uploaded
     }
+  
 
     let response
     
@@ -89,12 +89,22 @@ const SignUp: React.FC = () => {
     } catch (err) {
       setSuccess('');
 
-      // Handle errors
-      if (axios.isAxiosError(err) && err.response?.status === 400) {
-        setError('User already exists! please sign in or try another email.');
+    // Handle errors with better specificity
+    if (axios.isAxiosError(err)) {
+      // If error is a 400 status and response contains specific error message
+      if (err.response?.status === 400) {
+        const errorMessage = err.response?.data?.message || 'Failed to sign up. Please try again.';
+        if (errorMessage === 'User already exists') {
+          setError('User already exists! Please sign in or try another email.');
+        } else {
+          setError(errorMessage); // General error message
+        }
       } else {
-        setError('Failed to sign up. Please try again.');
+        setError('An unexpected error occurred. Please try again.');
       }
+    } else {
+      setError('An unknown error occurred.');
+    }
 
     }
   };
@@ -130,14 +140,14 @@ const SignUp: React.FC = () => {
           </div>
           {/* Profile Picture Upload */}
           <div className="mb-3">
-            <label className="form-label">Upload Profile Picture</label>
+            <label className="form-label">Upload Profile Picture (Optional)</label>
             <input type="file" accept="image/*" className="form-control" onChange={handleImageChange} />
           </div>
           {/* Image Preview */}
           {previewImage && (
-          <div className="mb-3 text-center">
-            <img src={previewImage} alt="Profile Preview" className="img-fluid rounded-circle" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
-          </div>
+            <div className="mb-3 text-center">
+              <img src={previewImage} alt="Profile Preview" className="img-fluid rounded-circle" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
+            </div>
           )}
           <button type="submit" className="btn btn-primary w-100">Sign Up</button>
         </form>
