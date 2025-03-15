@@ -2,7 +2,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000',
+  // baseURL: 'https://localhost:3000/api',
+  baseURL: 'https://node71.cs.colman.ac.il/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -31,7 +32,7 @@ axiosInstance.interceptors.response.use(
       
       try {
         // Call the refresh token endpoint
-        const refreshResponse = await axios.post('http://localhost:3000/auth/refresh-token', {
+        const refreshResponse = await axios.post('https://node71.cs.colman.ac.il/api/refresh-token', {
           token: Cookies.get('refreshToken'),
         });
         const newAccessToken = refreshResponse.data.accessToken;
@@ -44,7 +45,7 @@ axiosInstance.interceptors.response.use(
 
       } catch (refreshError) {
         console.error('Token refresh failed:', refreshError);
-        // window.location.href = '/signin'; // Redirect to login if refresh fails
+        // window.location.href = '/signIn'; // Redirect to login if refresh fails
         return Promise.reject(refreshError);
       }
     }
