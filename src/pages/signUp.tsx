@@ -12,13 +12,19 @@ const SignUp: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null); // 👈 Image preview state
 
   // Handle image selection
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setProfileImage(event.target.files[0]);
+      // Create a preview URL
+      const imageUrl = URL.createObjectURL(event.target.files[0]);
+      setPreviewImage(imageUrl);
+      
     } else {
       setProfileImage(null);
+      setPreviewImage(null);
     }
   };
 
@@ -127,7 +133,12 @@ const SignUp: React.FC = () => {
             <label className="form-label">Upload Profile Picture</label>
             <input type="file" accept="image/*" className="form-control" onChange={handleImageChange} />
           </div>
-
+          {/* Image Preview */}
+          {previewImage && (
+          <div className="mb-3 text-center">
+            <img src={previewImage} alt="Profile Preview" className="img-fluid rounded-circle" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
+          </div>
+          )}
           <button type="submit" className="btn btn-primary w-100">Sign Up</button>
         </form>
         {error && <div className="text-danger mt-3 text-center">{error}</div>}
