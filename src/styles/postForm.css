@@ -1,0 +1,51 @@
+/* Modal container */
+.modal-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    box-shadow: 24px;
+    padding: 16px;
+    width: 400px;
+  }
+  
+  /* Typography title */
+  .modal-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  
+  /* Stepper container */
+  .stepper-container {
+    margin-top: 16px;
+  }
+  
+  /* Text fields */
+  .text-field {
+    width: 100%;
+  }
+  
+  /* Multiline text fields */
+  .text-field-multiline {
+    width: 100%;
+    height: 120px;
+  }
+  
+  /* Button container */
+  .button-container {
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* Back Button */
+  .button-back {
+    variant: outlined;
+  }
+  
+  /* Next/Submit Buttons */
+  .button-next-submit {
+    variant: contained;
+  }
+  
