@@ -67,42 +67,6 @@ const UserPage = () => {
     }
   };
 
-  // Update user info
-  // const updateUserInfo = async () => {
-  //   try {
-  //     // If a new profile image exists, upload it first
-  //     let imageUrl = userInfo?.profileImage; // keep old image if no new image is selected
-
-  //     if (newProfileImage) {
-  //       const formData = new FormData();
-  //       formData.append('file', newProfileImage);
-
-  //       const imageResponse = await axiosInstance.post('/file', formData, {
-  //         headers: { 'Content-Type': 'multipart/form-data' },
-  //       });
-
-  //       imageUrl = imageResponse.data.imageUrl; // New image URL
-  //     }
-
-  //     await axiosInstance.put(
-  //       `/users/${userId}`,
-  //       {
-  //         ...formData,
-  //         profileImage: imageUrl, // Update profile image
-  //       },
-  //       {
-  //         headers: { 'Content-Type': 'application/json' },
-  //       }
-  //     );
-
-  //     setUserInfo((prev) => (prev ? { ...prev, ...formData, profileImage: imageUrl } : null));
-  //     setIsEditing(false);
-  //   } catch (err) {
-  //     console.error(err);
-  //     setError('Failed to update user info');
-  //   }
-  // };
-
   const updateUserInfo = async () => {
     try {
       let imageUrl = userInfo?.profileImage || ''; // Keep old image if no new image is selected
@@ -253,7 +217,12 @@ const UserPage = () => {
           <div className="card-body">
             <h5 className="card-title text-center mb-4">User Posts</h5>
             <div className="w-100">
-              <Posts posts={posts} />
+            <Posts 
+                 posts={posts} 
+                 currentPage={1} 
+                 setCurrentPage={() => {}} 
+                 totalPages={1} 
+               />
             </div>
           </div>
         </div>
