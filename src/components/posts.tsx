@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import '../styles/home.css';
 import axiosInstance from '../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
@@ -43,7 +43,7 @@ const Posts = ({ posts }: PostsProps) => {
   const [updatedPosts, setUpdatedPosts] = useState<Post[]>(posts);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState({ title: '', content: '' });
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  // const [isLiked, setIsLiked] = useState<boolean>(false);
   // const [isLiked, setIsLiked] = useState<boolean>(false);
   const [likedPosts, setLikedPosts] = useState<string[]>([]); // Define state for liked posts
 
