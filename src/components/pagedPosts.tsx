@@ -64,7 +64,6 @@ const PagedPosts: React.FC<PostsProps> = ({ posts, currentPage, setCurrentPage, 
                 : p
             )
           );
-          console.log(`Fetched ${commentResponse.data.length} comments for post ${post._id}`);
         } catch (error) {
           console.error(`Error fetching comments for post ${post._id}:`, error);
         }
@@ -359,7 +358,8 @@ const PagedPosts: React.FC<PostsProps> = ({ posts, currentPage, setCurrentPage, 
           </div>
         </div>
       ))}
-            {/* Paging Controls */}
+
+      {/* Paging */}
       <div className="paging-controls d-flex justify-content-center align-items-center mt-4">
         <button
           className="btn btn-primary"
