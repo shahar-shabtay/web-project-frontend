@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/home.css';
 import Header from '../components/header';
-import axiosInstance from '../api/axiosInstance';
+import axiosInstance from '../api/axiosInstance'
 import CreatePostPage from './CreatePostPage';
 import Posts from '../components/posts';
 
@@ -19,21 +19,18 @@ interface Post {
 
 const Home: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const postsPerPage = 10; // Limit per page
 
+  // Fetch posts when the component mounts
   useEffect(() => {
     axiosInstance
-      .get(`/posts/paging?page=${currentPage}&limit=${postsPerPage}`)
+      .get('/posts')
       .then((response) => {
-        setPosts(response.data.data);
-        setTotalPages(response.data.totalPages);
+        setPosts(response.data);
       })
       .catch((error) => {
         console.error('Error fetching the posts:', error);
       });
-  }, [currentPage]);
+  }, []);
 
   return (
     <div>
@@ -48,12 +45,12 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
-
+      
       <div className="container mt-5">
         <div className="card p-3">
           <div className="card-body">
             <div className="w-100">
-              <Posts posts={posts} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
+              <Posts posts={posts} />
             </div>
           </div>
         </div>
