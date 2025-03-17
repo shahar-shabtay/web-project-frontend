@@ -28,6 +28,15 @@ interface PostsProps {
 const accessToken = Cookies.get("accessToken");
 let userName = '';
 
+const fetchUserData = async (userId: string) => {
+  try {
+    const response = await axiosInstance.get(`/users/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 if (!accessToken) {
   console.log('Access token not found');
 } else {
@@ -37,8 +46,9 @@ if (!accessToken) {
   if (!userId) {
     throw new Error('User ID not found in token');
   }
-  const response = await axiosInstance.get(`/users/${userId}`);
-  userName = response.data.username;
+  fetchUserData(userId).then(data => {
+    userName = data.username;
+  });
 }
 
 const PagedPosts: React.FC<PostsProps> = ({ posts, currentPage, setCurrentPage, totalPages }) => {
