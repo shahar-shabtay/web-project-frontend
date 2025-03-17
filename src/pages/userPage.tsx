@@ -219,9 +219,9 @@ const UserPage = () => {
             <div className="w-100">
             <Posts 
                  posts={posts} 
-                 currentPage={1} 
-                 setCurrentPage={() => {}} 
-                 totalPages={1} 
+                //  currentPage={1} 
+                //  setCurrentPage={() => {}} 
+                //  totalPages={1} 
                />
             </div>
           </div>
