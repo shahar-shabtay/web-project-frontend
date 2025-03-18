@@ -213,7 +213,8 @@ const UserPage = () => {
         )}
       </div>
       <div className="container mt-5">
-        <div className="card p-3">
+        <div className="card p-3"
+        style={{ backgroundImage: 'url(/dogs_bg2.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <div className="card-body">
             <h5 className="card-title text-center mb-4">User Posts</h5>
             <div className="w-100">

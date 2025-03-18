@@ -84,7 +84,8 @@ const SignIn: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
 
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}> 
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+      <div className="d-flex justify-content-center align-items-center vh-100 bg-light"
+        style={{ backgroundImage: 'url(/dogs_bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="card shadow p-4" style={{ width: '100%', maxWidth: '400px' }}>
           <h2 className="text-center mb-4">Sign In</h2>
           {error && <div className="text-danger mb-3 text-center">{error}</div>}

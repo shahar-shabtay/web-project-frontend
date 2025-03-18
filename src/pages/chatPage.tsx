@@ -37,7 +37,6 @@ const ChatPage = () => {
   return (
     <div>
       <Header />
-      
       <div className="container my-5">
         <h1 className="text-center mb-4">Ask Our AI Friend a Question!</h1>
         <div className="mb-3">
@@ -66,7 +65,6 @@ const ChatPage = () => {
           </div>
         )}
       </div>
-
       <Footer />
     </div>
   );
