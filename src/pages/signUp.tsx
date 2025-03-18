@@ -110,7 +110,8 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-light"
+    style={{ backgroundImage: 'url(/dogs_bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <div className="card p-4 shadow" style={{ width: '100%', maxWidth: '400px' }}>
         <h2 className="text-center mb-4">Sign Up</h2>
         <form onSubmit={handleSubmit}>
