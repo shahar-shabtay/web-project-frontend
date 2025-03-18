@@ -33,7 +33,7 @@ axiosInstance.interceptors.response.use(
       
       try {
         // Call the refresh token endpoint
-        const refreshResponse = await axios.post("${backend_url}/auth/refresh-token", {
+        const refreshResponse = await axios.post("https://node71.cs.colman.ac.il/auth/refresh-token", {
           token: Cookies.get('refreshToken'),
         });
         const newAccessToken = refreshResponse.data.accessToken;

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && cp dist/* ../JWT-college/dist/src/front",
+    "build": "tsc -b && vite build && cp -r dist/* ../JWT-college/dist/src/front",
     "lint": "eslint .",
     "preview": "vite preview"
   },
