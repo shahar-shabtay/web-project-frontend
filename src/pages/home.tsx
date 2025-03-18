@@ -39,24 +39,18 @@ const Home: React.FC = () => {
   return (
     <div>
       <Header />
+      {/* Create Post Section */}
       <div className="container mt-5 d-flex justify-content-center">
-        <div className="card p-3 w-100 text-center">
-          <div className="card-body">
-            <img src="/full_logo.png" alt="Logo" className="img-fluid mb-3" style={{ height: '200px' }} />
-            <div className="w-100">
-              <CreatePostPage />
-            </div>
-          </div>
+        <div className="post-card">
+          <img src="/full_logo.png" alt="Logo" className="logo-img" />
+          <CreatePostPage />
         </div>
       </div>
       
+      {/* Posts Section */}
       <div className="container mt-5">
-        <div className="card p-3">
-          <div className="card-body">
-            <div className="w-100">
-              <PagedPosts posts={posts} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
-            </div>
-          </div>
+        <div className="post-list">
+          <PagedPosts posts={posts} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
         </div>
       </div>
     </div>
