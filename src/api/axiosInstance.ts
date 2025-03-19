@@ -1,8 +1,10 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+const backend_url = import.meta.env.VITE_BACKEND_URL
+
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: backend_url,
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -31,7 +33,7 @@ axiosInstance.interceptors.response.use(
       
       try {
         // Call the refresh token endpoint
-        const refreshResponse = await axios.post('http://localhost:3000/auth/refresh-token', {
+        const refreshResponse = await axios.post("https://node71.cs.colman.ac.il/auth/refresh-token", {
           token: Cookies.get('refreshToken'),
         });
         const newAccessToken = refreshResponse.data.accessToken;

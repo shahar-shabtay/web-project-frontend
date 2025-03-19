@@ -218,7 +218,12 @@ const UserPage = () => {
           <div className="card-body">
             <h5 className="card-title text-center mb-4">User Posts</h5>
             <div className="w-100">
-              <Posts posts={posts} />
+            <Posts 
+                 posts={posts} 
+                //  currentPage={1} 
+                //  setCurrentPage={() => {}} 
+                //  totalPages={1} 
+               />
             </div>
           </div>
         </div>

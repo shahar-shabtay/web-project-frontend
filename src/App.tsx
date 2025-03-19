@@ -34,10 +34,10 @@ const App: React.FC = () => {
             <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/signin" />} />
             <Route path="/signin" element={<SignIn onSignIn={() => setIsAuthenticated(true)} />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/comments/:postId" element={<CommentsPage />} />
-            <Route path="/comments/:postId/:postTitle" element={<CommentsPage />} />
-            <Route path="/chat" element={<ChatPage />} />
-            <Route path="/user" element={<UserPage />} />
+            <Route path="/comments/:postId" element={isAuthenticated ? <CommentsPage /> : <Navigate to="/signin" />} />
+            <Route path="/comments/:postId/:postTitle" element={isAuthenticated ? <CommentsPage /> : <Navigate to="/signin" />} />
+            <Route path="/chat" element={isAuthenticated ? <ChatPage /> : <Navigate to="/signin" />} />
+            <Route path="/user" element={isAuthenticated ? <UserPage /> : <Navigate to="/signin" />} />
           </Routes>
         </main>
       </div>
