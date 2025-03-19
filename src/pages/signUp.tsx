@@ -12,7 +12,7 @@ const SignUp: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>(null); // 👈 Image preview state
+  const [previewImage, setPreviewImage] = useState<string | null>(null); // Image preview state
 
   // Handle image selection
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
